@@ -20,8 +20,12 @@ IBApi::IBApi(IBGateway *gateWay)
 
 IBApi::~IBApi()
 {
+	this->worker->join();
+	delete worker;
 	delete this->client;
 	delete this->wrapper;
+
+
 };
 ///-------------------------------------------------------------------------------------
 ///负责调用processMsgs的线程工作函数

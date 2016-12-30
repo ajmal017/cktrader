@@ -266,4 +266,16 @@ std::map<std::string, IStrategy*>* ServiceMgr::getStrategyMap()
 	return m_StrategyMap;
 }
 
+bool ServiceMgr::getContract(std::string symbol, ContractData& contract)
+{
+	std::map<std::string, ContractData>::iterator it = m_contractMap.find(symbol);
+	if (it != m_contractMap.end())
+	{
+		contract = it->second;
+		return true;
+	}
+
+	return false;
+}
+
 }//cktrader

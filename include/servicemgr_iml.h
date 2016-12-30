@@ -37,6 +37,8 @@ public:
 
 	virtual EventEngine* getEventEngine();
 
+	bool getContract(std::string symbol, ContractData& contract);
+
 	std::map<std::string, IGateway*>* getGatewayMap();
 	std::map<std::string, IStrategy*>* getStrategyMap();
 
@@ -50,6 +52,8 @@ private:
 	std::map<std::string, IGateway*> *m_GateWayMap = nullptr;//×°ÔØgateway
 	
 	std::map<std::string, IStrategy*> *m_StrategyMap = nullptr;//×°ÔØstrategy
+
+	std::map<std::string, ContractData> m_contractMap;
 
 	EventEngine* m_eventEngine = nullptr;
 

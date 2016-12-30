@@ -6,7 +6,7 @@
 #include <thread>
 
 
-StrategyAtrRsi::StrategyAtrRsi(IServiceMgr* x, const char* name)
+StrategyAtrRsi::StrategyAtrRsi(IServiceMgr* x, const char* name):IStrategy(x,name)
 {
 	pctp_Gateway = x->getGateWay("ctp");
 	plts_Gateway = x->getGateWay("lts");
@@ -40,6 +40,7 @@ bool StrategyAtrRsi::onInit()
 	sub1.symbol = "rb1701,IF1703,cu1702,al1702,zn1701,ni1703,c1703,SR703,CF701,CF703,CF707,FG612,FG703,JR701,LR701,MA701,OI701,PM707";
 	//sub1.symbol = "rb1705";
 	pctp_Gateway->subscribe(sub1);
+	butler->subscribe("rb1705");
 
 	SubscribeReq sub2;
 	sub2.symbol = "000002,000001";

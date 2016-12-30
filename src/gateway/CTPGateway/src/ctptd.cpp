@@ -256,7 +256,7 @@ namespace cktrader {
 		m_event_service->put(task);
 	}
 
-	///请求查询投资者持仓响应
+	///请求查询投资者持仓响应	
 	void CtpTd::OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
 	{
 		CtpData data = CtpData();
@@ -626,6 +626,7 @@ namespace cktrader {
 		api->ReqQryInstrument(&myreq, reqID);
 	}
 
+	//程序有问题？持仓数据没和上层对应上
 	void CtpTd::processRspQryInvestorPosition(Datablk& data)
 	{
 		CtpData ctp_data = data.cast<CtpData>();
@@ -1105,10 +1106,11 @@ namespace cktrader {
 
 		strncpy(myreq.BrokerID, brokerID.c_str(), sizeof(myreq.BrokerID) - 1);
 		strncpy(myreq.InvestorID, userID.c_str(), sizeof(myreq.InvestorID) - 1);
+
 		strncpy(myreq.InstrumentID, req.symbol.c_str(), sizeof(myreq.InstrumentID) - 1);
 		strncpy(myreq.ExchangeID, req.exchange.c_str(), sizeof(myreq.ExchangeID) - 1);
-
 		strncpy(myreq.OrderRef, req.orderID.c_str(), sizeof(myreq.OrderRef) - 1);
+
 		myreq.FrontID = frontID;
 		myreq.SessionID = sessionID;
 

@@ -4,14 +4,26 @@
 
 #include "utils/ckdef.h"
 #include "utils/cktypes.h"
+#include "StrategyButler.h"
 
 namespace cktrader {
 
-class IServiceMgr;
-
-class IStrategy
+class CK_EXPORTS IStrategy
 {
+protected:
+	StrategyButler *butler = nullptr;
+
 public:
+	IStrategy(IServiceMgr* x, std::string name)
+	{
+		butler = new StrategyButler(x,name);
+	}
+
+	virtual ~IStrategy()
+	{
+		delete butler;
+	}
+
 	virtual bool onInit() = 0;
 	virtual bool onStart() = 0;
 	virtual bool onStop() = 0;

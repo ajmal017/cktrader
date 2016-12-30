@@ -24,7 +24,7 @@ class CK_EXPORTS StrategyAtrRsi :public IStrategy
 {
 public:
 	StrategyAtrRsi(IServiceMgr* x, const char* name);
-	~StrategyAtrRsi();
+	virtual ~StrategyAtrRsi();
 	bool onInit();
 	bool onStart();
 	bool onStop();

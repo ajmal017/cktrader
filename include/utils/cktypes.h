@@ -49,19 +49,6 @@ struct CK_EXPORTS LtsData
 	bool task_last;		//是否为最后返回
 };
 
-struct CK_EXPORTS StopOrder
-{
-	std::string symbol;
-	std::string orderType;
-	std::string direction;
-	std::string offset;
-	double price;
-	int volume;
-	std::string stopOrderID;
-	std::string status;
-	std::string strategyName;
-};
-
 struct CK_EXPORTS BarData
 {
 	std::string symbol;
@@ -230,7 +217,7 @@ struct CK_EXPORTS OrderReq
 	std::string symbol;
 	std::string exchange;
 	double price;
-	int volume;
+	double volume;
 	std::string priceType;
 	std::string direction;
 	std::string offset;
@@ -250,6 +237,19 @@ struct CK_EXPORTS CancelOrderReq
 	std::string frontID;
 	std::string sessionID;
 	std::string strateyName;
+};
+
+struct CK_EXPORTS StopOrder
+{
+	std::string tSymbol;
+	std::string orderType;
+	std::string direction;
+	std::string offset;
+	double price;
+	double volume;
+
+	std::string stopOrderID; // 停止单的本地编号
+	std::string status; // 停止单状态
 };
 
 #endif

@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/widgetbox">
+        <file>image/collapsed.png</file>
+        <file>image/expanded.png</file>
+        <file>image/widgetbox.png</file>
+    </qresource>
+</RCC>

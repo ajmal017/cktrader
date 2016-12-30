@@ -57,6 +57,12 @@
     <ClInclude Include="..\..\include\utils\strptime.h">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\strategy\StrategyButler.h">
+      <Filter>Header Files\strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\strategy\PositionBuffer.h">
+      <Filter>Header Files\strategy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="servicemgr.cpp">
@@ -64,6 +70,12 @@
     </ClCompile>
     <ClCompile Include="..\..\include\utils\json11.cpp">
       <Filter>Header Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="StrategyButler.cpp">
+      <Filter>Source Files\strategy</Filter>
+    </ClCompile>
+    <ClCompile Include="PositionBuffer.cpp">
+      <Filter>Source Files\strategy</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

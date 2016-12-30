@@ -16,6 +16,7 @@ class IServiceMgr
 public:
 	virtual IGateway* getGateWay(std::string gateWayName) = 0;
 	virtual EventEngine* getEventEngine()=0;
+	virtual bool getContract(std::string symbol, ContractData& contract) = 0;
 };
 
 }//cktrader
