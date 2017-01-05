@@ -1,3 +1,6 @@
 *.obj
 *.exe
 /Debug/
+/Release/
+/ipch/
+*.pdb
