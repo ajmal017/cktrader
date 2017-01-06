@@ -38,6 +38,7 @@ public:
 	virtual EventEngine* getEventEngine();
 
 	bool getContract(std::string symbol, ContractData& contract);
+	void onContract(Datablk& contract);
 
 	std::map<std::string, IGateway*>* getGatewayMap();
 	std::map<std::string, IStrategy*>* getStrategyMap();

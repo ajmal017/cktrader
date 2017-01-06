@@ -1,1 +1,8 @@
-﻿
+﻿  test.cpp
+  Generating code
+  All 107 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  test.vcxproj -> E:\2106\c++\cktrader\Release\testall.exe
+  test.vcxproj -> E:\2106\c++\cktrader\Release\testall.pdb (Full PDB)
+  E:\2106\c++\cktrader\Release\testall.exe
+  复制了 1 个文件

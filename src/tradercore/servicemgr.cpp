@@ -17,6 +17,8 @@ ServiceMgr::ServiceMgr():the_mutex()
 
 	m_eventEngine = new EventEngine();
 	m_eventEngine->startEngine();
+
+	m_eventEngine->registerHandler(EVENT_CONTRACT, std::bind(&ServiceMgr::onContract, this, std::placeholders::_1), "ServiceMgr");
 }
 
 ServiceMgr::ServiceMgr(ServiceMgr& mgr):the_mutex()
@@ -276,6 +278,13 @@ bool ServiceMgr::getContract(std::string symbol, ContractData& contract)
 	}
 
 	return false;
+}
+
+void ServiceMgr::onContract(Datablk& contract)
+{
+	ContractData cn = contract.cast<ContractData>();
+
+	m_contractMap.insert(std::pair<std::string, ContractData>(cn.symbol,cn));
 }
 
 }//cktrader

@@ -25,7 +25,8 @@ private:
 	QPushButton* start_all_strategy_button;
 	QPushButton* stop_all_strategy_button;
 
-	QHBoxLayout* button_layout;
+	QHBoxLayout* stratey_button_layout;
+	QHBoxLayout* trade_button_layout;
 	QVBoxLayout* layout;
 
 	WidgetBox* strategy_box;

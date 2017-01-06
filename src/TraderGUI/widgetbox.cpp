@@ -43,8 +43,6 @@ WidgetBox::WidgetBox(QWidget *parent) : QWidget(parent)
           SLOT(onItemClicked(QTreeWidgetItem*, int)));
   connect(mTreeWidget, SIGNAL(itemActivated(QTreeWidgetItem*, int)),
           SLOT(onItemClicked(QTreeWidgetItem*, int)));
-
-  initWidgetBox();
 }
 WidgetBox::~WidgetBox()
 {
@@ -357,14 +355,4 @@ void WidgetBox::changeQtDesignerProperty(QString propertyName, QVariant value,bo
   Q_UNUSED(propertyName);
   Q_UNUSED(value);
   Q_UNUSED(markChangedOnly);
-}
-
-void  WidgetBox::initWidgetBox()
-{
-	for (int i = 1; i <= 10; i++)
-	{	
-		addPage(new QPushButton("xxx",this));
-	}
-
-	setPageExpanded(false);
 }

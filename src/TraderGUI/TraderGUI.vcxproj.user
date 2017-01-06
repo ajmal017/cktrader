@@ -3,13 +3,16 @@
   <PropertyGroup />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <QTDIR>C:\Qt\Qt5.7.1\5.7\msvc2015</QTDIR>
-    <LocalDebuggerEnvironment>PATH=$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b$(VCRedistPaths)%PATH%
+    <LocalDebuggerEnvironment>PATH=$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b$(VCRedistPaths)%PATH%
 $(LocalDebuggerEnvironment)
     </LocalDebuggerEnvironment>
+    <LocalDebuggerCommand>$(SolutionDir)bin\debug\$(TargetName).exe</LocalDebuggerCommand>
+    <LocalDebuggerWorkingDirectory>$(SolutionDir)bin\debug</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <QTDIR>C:\Qt\Qt5.7.1\5.7\msvc2015</QTDIR>
-    <LocalDebuggerEnvironment>PATH=$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b$(VCRedistPaths)%PATH%
+    <LocalDebuggerEnvironment>PATH=$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b"$(QTDIR)\bin%3b$(QTDIR)\bin%3b$(VCRedistPaths)%PATH%
 $(LocalDebuggerEnvironment)
     </LocalDebuggerEnvironment>
   </PropertyGroup>

@@ -79,8 +79,6 @@
 #define PRICETYPE_FAK "FAK"
 #define PRICETYPE_FOK "FOK"
 
-#define CKTRADER_SETTING_FILE "cktrader_setting.json"
-
 #define CTP_PATH_COM "\\ctp_temp\\"
 #define LTS_PATH_COM "\\lts_temp\\"
 

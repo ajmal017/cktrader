@@ -3,11 +3,21 @@
 #include "NoFocusDelegate.h"
 #include "qstring.h"
 
-LogForm::LogForm(QWidget* parent)
+#include "servicemgr_iml.h"
+
+#include <QTextCodec>
+
+using namespace cktrader;
+
+LogForm::LogForm(ServiceMgr* serviceMgr,QWidget* parent)
 	:QWidget(parent)
 	, ui(new Ui::LogForm)
 {
 	ui->setupUi(this);
+
+	this->serviceMgr = serviceMgr;
+
+	codec = QTextCodec::codecForName("gbk");
 
 	//设置列=
 	table_col_ << QStringLiteral("内容")
@@ -30,18 +40,13 @@ LogForm::~LogForm()
 
 void LogForm::init()
 {
-
-}
-
-void LogForm::shutdown()
-{
-
+	this->serviceMgr->getEventEngine()->registerHandler(EVENT_LOG, std::bind(&LogForm::onLog, this, std::placeholders::_1), "LogForm");
 }
 
 void LogForm::adjustTableWidget(QTableWidget* tableWidget)
 {
 	tableWidget->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft); //设置列左对齐=
-	tableWidget->horizontalHeader()->setStretchLastSection(true); //最后一览自适应宽度=
+	tableWidget->horizontalHeader()->setStretchLastSection(false); //最后一览自适应宽度=
 																  //tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents); //自适应列宽，不能拖动，会很卡=
 																  //tableWidget->horizontalHeader()->setDefaultSectionSize(150); //缺省列宽=
 	tableWidget->horizontalHeader()->setSectionsClickable(false); //设置表头不可点击=
@@ -60,4 +65,16 @@ void LogForm::adjustTableWidget(QTableWidget* tableWidget)
 																	   //tableWidget->setSelectionMode(QAbstractItemView::ExtendedSelection); //可多选多行=
 	tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows); //设置选择行为时每次选择一行=
 	tableWidget->setItemDelegate(new NoFocusDelegate()); // 去鼠标点击出现的虚框=
+}
+
+void LogForm::onLog(Datablk& log)
+{
+	LogData log_data = log.cast<LogData>();
+
+	ui->logTableWidget->insertRow(0);
+
+	QString content = codec->toUnicode(log_data.logContent.c_str());
+	QString gate = codec->toUnicode(log_data.gateWayName.c_str());
+	ui->logTableWidget->setItem(0, 0, new QTableWidgetItem(content));
+	ui->logTableWidget->setItem(0, 1, new QTableWidgetItem(gate));
 }

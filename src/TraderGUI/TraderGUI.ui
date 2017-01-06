@@ -28,26 +28,24 @@
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QTabWidget" name="tabMarket">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="currentIndex">
-         <number>-1</number>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
+     <widget class="QSplitter" name="horizontal_splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QWidget" name="strategy_widget" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+      <widget class="QWidget" name="layoutWidget">
+       <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QTabWidget" name="tabLeft">
+         <widget class="QTabWidget" name="tabMarket">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -58,21 +56,38 @@
          </widget>
         </item>
         <item>
-         <widget class="QTabWidget" name="tabRight">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="currentIndex">
-           <number>-1</number>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QTabWidget" name="tabLeft">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="currentIndex">
+             <number>-1</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTabWidget" name="tabRight">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="currentIndex">
+             <number>-1</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
-      </item>
-     </layout>
+      </widget>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -95,20 +110,23 @@
      </property>
      <addaction name="ctpActionLogin"/>
      <addaction name="ctpActionLogout"/>
+     <addaction name="ctpActionConfig"/>
     </widget>
     <widget class="QMenu" name="menuLST">
      <property name="title">
       <string>LST</string>
      </property>
-     <addaction name="actionLogin_2"/>
-     <addaction name="actionLogout_2"/>
+     <addaction name="ltsActionLogin"/>
+     <addaction name="ltsActionLogout"/>
+     <addaction name="ltsActionConfig"/>
     </widget>
     <widget class="QMenu" name="menuIB">
      <property name="title">
       <string>IB</string>
      </property>
-     <addaction name="actionLogin_3"/>
-     <addaction name="actionLogout_3"/>
+     <addaction name="ibActionLogin"/>
+     <addaction name="ibActionLogout"/>
+     <addaction name="ibActionConfig"/>
     </widget>
     <addaction name="separator"/>
     <addaction name="menuCTP"/>
@@ -148,22 +166,22 @@
     <string>logout</string>
    </property>
   </action>
-  <action name="actionLogin_2">
+  <action name="ltsActionLogin">
    <property name="text">
     <string>login</string>
    </property>
   </action>
-  <action name="actionLogout_2">
+  <action name="ltsActionLogout">
    <property name="text">
     <string>logout</string>
    </property>
   </action>
-  <action name="actionLogin_3">
+  <action name="ibActionLogin">
    <property name="text">
     <string>login</string>
    </property>
   </action>
-  <action name="actionLogout_3">
+  <action name="ibActionLogout">
    <property name="text">
     <string>logout</string>
    </property>
@@ -171,6 +189,21 @@
   <action name="actionQuit">
    <property name="text">
     <string>Quit</string>
+   </property>
+  </action>
+  <action name="ctpActionConfig">
+   <property name="text">
+    <string>config</string>
+   </property>
+  </action>
+  <action name="ltsActionConfig">
+   <property name="text">
+    <string>config</string>
+   </property>
+  </action>
+  <action name="ibActionConfig">
+   <property name="text">
+    <string>config</string>
    </property>
   </action>
  </widget>

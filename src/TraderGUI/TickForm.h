@@ -13,9 +13,9 @@ namespace Ui {
 	class TickForm;
 }
 
-/*namespace cktrader {
+namespace cktrader {
 	class ServiceMgr;
-}*/
+}
 
 
 class TickForm:public QWidget
@@ -23,18 +23,21 @@ class TickForm:public QWidget
 	Q_OBJECT
 
 public:
-	//TickForm(cktrader::ServiceMgr* serviceMgr,QWidget* parent = 0);
-	TickForm( QWidget* parent = 0);
+	TickForm(cktrader::ServiceMgr* serviceMgr,QWidget* parent = 0);
+	//TickForm( QWidget* parent = 0);
 	~TickForm();
 
 	void init();
-	void shutdown();
 
 	void onTick(Datablk& tick);
 
 private:
-	void adjustTableWidget(QTableWidget* tableWidget);
-	
+	void adjustTableWidget(QTableWidget* tableWidget);	
+
+private slots:
+	void pushButtonSendOrder_clicked();
+	void tableWidget_cellClicked(int row, int column);
+	void contractlineedit_returnPressed();
 
 private:
 	Ui::TickForm* ui;
@@ -42,7 +45,9 @@ private:
 	QStringList table_col_;
 	QMap<QString, int> table_row_;
 
-	//cktrader::ServiceMgr* serviceMgr;
+	cktrader::ServiceMgr* serviceMgr;
+
+	QTextCodec * codec;
 };
 
 #endif

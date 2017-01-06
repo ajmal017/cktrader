@@ -65,8 +65,6 @@ protected:
   void changeQtDesignerProperty(QString propertyName, QVariant value,
                                 bool markChangedOnly = false);
 
-  void initWidgetBox();
-
 protected slots:
   void onItemClicked(QTreeWidgetItem *item, int);
   void setPageExpandedProperty();

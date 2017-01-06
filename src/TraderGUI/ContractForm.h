@@ -5,8 +5,15 @@
 #include <QWidget>
 #include <qtablewidget.h>
 
+#include "utils/ckdef.h"
+#include "utils/cktypes.h"
+
 namespace Ui {
 	class ContractForm;
+}
+
+namespace cktrader {
+	class ServiceMgr;
 }
 
 class ContractForm :public QWidget
@@ -14,21 +21,27 @@ class ContractForm :public QWidget
 	Q_OBJECT
 
 public:
-	ContractForm(QWidget* parent = 0);
+	ContractForm(cktrader::ServiceMgr* serviceMgr,QWidget* parent = 0);
 	~ContractForm();
 
 	void init();
-	void shutdown();
+
+	void onContract(Datablk& contract);
 
 private:
 	void adjustTableWidget(QTableWidget* tableWidget);
 
-	private slots:
+private slots:
 
 
 private:
 	Ui::ContractForm* ui;
 	QStringList table_col_;
+	QMap<QString, int> table_row_;
+
+	cktrader::ServiceMgr* serviceMgr;
+
+	QTextCodec * codec;
 };
 
 #endif

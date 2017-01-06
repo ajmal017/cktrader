@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>StrategyPanel</class>
+ <widget class="QWidget" name="StrategyPanel">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>271</width>
+    <height>107</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPushButton" name="init_strategy_pushButton">
+         <property name="text">
+          <string>初始化策略</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="begin_trade_pushButton">
+         <property name="text">
+          <string>开始交易</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="stop_trade_pushButton">
+         <property name="text">
+          <string>停止交易</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QPushButton" name="paramter_set_pushButton">
+         <property name="text">
+          <string>参数设置</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="back_test_pushButton">
+         <property name="text">
+          <string>回测</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="risk_manage_pushButton">
+         <property name="text">
+          <string>风险管理</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QPushButton" name="postionPushButton">
+         <property name="text">
+          <string>策略持仓</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="tradePushButton">
+         <property name="text">
+          <string>策略委托</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="orderPushButton">
+         <property name="text">
+          <string>策略成交</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
