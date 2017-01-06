@@ -5,8 +5,15 @@
 #include <QWidget>
 #include <qtablewidget.h>
 
+#include "utils/ckdef.h"
+#include "utils/cktypes.h"
+
 namespace Ui {
 	class OrderForm;
+}
+
+namespace cktrader {
+	class ServiceMgr;
 }
 
 class OrderForm :public QWidget
@@ -14,20 +21,30 @@ class OrderForm :public QWidget
 	Q_OBJECT
 
 public:
-	OrderForm(QWidget* parent = 0);
+	OrderForm(cktrader::ServiceMgr* serviceMgr, QWidget* parent = 0);
 	~OrderForm();
 
 	void init();
-	void shutdown();
+
+	void onOrder(Datablk& or);
 
 private:
 	void adjustTableWidget(QTableWidget* tableWidget);
 
-	private slots:
+private slots:
+	void updateContent(OrderData order);
+
+signals:
+	void updateEvent(OrderData order);
 
 private:
 	Ui::OrderForm* ui;
 	QStringList table_col_;
+	QMap<QString, int> table_row_;
+
+	cktrader::ServiceMgr* serviceMgr;
+
+	QTextCodec * codec;
 };
 
 #endif

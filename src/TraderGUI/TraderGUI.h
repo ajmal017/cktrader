@@ -55,6 +55,8 @@ private slots:
 	void ibActionLogout_triggered();
 	void ibActionConfig_triggered();
 
+	void quit();
+
 private:
     Ui::TraderGUIClass* ui;
 

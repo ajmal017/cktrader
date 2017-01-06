@@ -51,6 +51,8 @@ public:
 	void put_task(Task& data);
 	void put_handler_task(Task& data);
 
+	size_t task_count();
+
 	//当前task处理完成后，释放一个事件只能有一个线程处理的锁
 	void task_run_end(std::string task_type);
 

@@ -37,9 +37,15 @@ EventEngine::~EventEngine()
 	{		
 		for (std::vector<std::thread*>::iterator it = m_task_thread_pool->begin(); it != m_task_thread_pool->end(); it++)
 		{
-			(*it)->join();
-			delete (*it);
-			m_task_thread_pool->erase(it);
+			if (task_pool->task_count())
+			{
+				(*it)->join();
+				delete (*it);
+			}
+			else
+			{
+				(*it)->detach();
+			}		
 		}
 
 		delete m_task_thread_pool;

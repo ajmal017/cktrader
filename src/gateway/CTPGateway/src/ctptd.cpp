@@ -615,15 +615,21 @@ namespace cktrader {
 
 	void CtpTd::processRspSettlementInfoConfirm(Datablk& data)
 	{
+		CtpData ctp_data = data.cast<CtpData>();
+
 		LogData log = LogData();
 		log.gateWayName = gateWayName;
 		log.logContent = "结算信息确认完成";
 		gateWay->onLog(log);
 
-		CThostFtdcQryInstrumentField myreq = CThostFtdcQryInstrumentField();
-		memset(&myreq, 0, sizeof(myreq));
-		reqID++;
-		api->ReqQryInstrument(&myreq, reqID);
+		if (ctp_data.task_last)
+		{
+			std::this_thread::sleep_for(std::chrono::seconds(2));
+			CThostFtdcQryInstrumentField myreq = CThostFtdcQryInstrumentField();
+			memset(&myreq, 0, sizeof(myreq));
+			reqID++;
+			api->ReqQryInstrument(&myreq, reqID);
+		}		
 	}
 
 	//程序有问题？持仓数据没和上层对应上
@@ -634,9 +640,20 @@ namespace cktrader {
 		CThostFtdcInvestorPositionField task_data = ctp_data.task_data.cast<CThostFtdcInvestorPositionField>();
 
 		std::string direction;
-		std::stringstream stream;
-		stream << task_data.PosiDirection;
-		direction = stream.str();
+
+		if (task_data.PosiDirection == THOST_FTDC_PD_Net)
+		{
+			direction = DIRECTION_NET;
+		}
+		else if (task_data.PosiDirection == THOST_FTDC_PD_Long)
+		{
+			direction = DIRECTION_LONG;
+		}
+		else if(task_data.PosiDirection == THOST_FTDC_PD_Short)
+		{
+			direction = DIRECTION_SHORT;
+		}
+		
 		std::string positionName = std::string(task_data.InstrumentID) + "." + direction;
 
 		PositionData posData = PositionData();
@@ -732,15 +749,15 @@ namespace cktrader {
 		contract.strikePrice = task_data.StrikePrice;
 		contract.underlyingSymbol = task_data.UnderlyingInstrID;
 
-		if (task_data.ProductClass == '1')
+		if (task_data.ProductClass == THOST_FTDC_PC_Futures)
 		{
 			contract.productClass = PRODUCT_FUTURES;
 		}
-		else if (task_data.ProductClass == '2')
+		else if (task_data.ProductClass == THOST_FTDC_PC_Options)
 		{
 			contract.productClass = PRODUCT_OPTION;
 		}
-		else if (task_data.ProductClass == '3')
+		else if (task_data.ProductClass == THOST_FTDC_PC_Combination)
 		{
 			contract.productClass = PRODUCT_COMBINATION;
 		}
@@ -803,11 +820,11 @@ namespace cktrader {
 
 		order.orderID = std::string(task_data.OrderRef);
 
-		if (task_data.Direction == '0')
+		if (task_data.Direction == THOST_FTDC_D_Buy)
 		{
 			order.direction = DIRECTION_LONG;
 		}
-		else if (task_data.Direction == '1')
+		else if (task_data.Direction == THOST_FTDC_D_Sell)
 		{
 			order.direction = DIRECTION_SHORT;
 		}
@@ -816,32 +833,40 @@ namespace cktrader {
 			order.direction = DIRECTION_UNKNOWN;
 		}
 
-		if (task_data.CombOffsetFlag[0] == '0')
+		if (task_data.CombOffsetFlag[0] == THOST_FTDC_OF_Open)
 		{
 			order.offset = OFFSET_OPEN;
 		}
-		else if (task_data.CombOffsetFlag[0] == '1')
+		else if (task_data.CombOffsetFlag[0] == THOST_FTDC_OF_Close)
 		{
 			order.offset = OFFSET_CLOSE;
+		}
+		else if (task_data.CombOffsetFlag[0] == THOST_FTDC_OF_CloseToday)
+		{
+			order.offset = OFFSET_CLOSETODAY;
+		}
+		else if(task_data.CombOffsetFlag[0] == THOST_FTDC_OF_CloseToday)
+		{
+			order.offset = OFFSET_CLOSEYESTERDAY;
 		}
 		else
 		{
 			order.offset = OFFSET_UNKNOWN;
 		}
 
-		if (task_data.OrderStatus == '0')
+		if (task_data.OrderStatus == THOST_FTDC_OST_AllTraded)
 		{
 			order.status = STATUS_ALLTRADED;
 		}
-		else if (task_data.OrderStatus == '1')
+		else if (task_data.OrderStatus == THOST_FTDC_OST_PartTradedQueueing)
 		{
 			order.status = STATUS_PARTTRADED;
 		}
-		else if (task_data.OrderStatus == '3')
+		else if (task_data.OrderStatus == THOST_FTDC_OST_NoTradeQueueing)
 		{
 			order.status = STATUS_NOTTRADED;
 		}
-		else if (task_data.OrderStatus == '5')
+		else if (task_data.OrderStatus == THOST_FTDC_OST_Canceled)
 		{
 			order.status = STATUS_CANCELLED;
 		}
@@ -1005,7 +1030,10 @@ namespace cktrader {
 		strncpy(myreq.BrokerID, brokerID.c_str(), sizeof(myreq.BrokerID) - 1);
 		strncpy(myreq.InvestorID, userID.c_str(), sizeof(myreq.InvestorID) - 1);
 
-		this->api->ReqQryTradingAccount(&myreq, reqID);
+		if (this->api)
+		{
+			this->api->ReqQryTradingAccount(&myreq, reqID);
+		}		
 	}
 
 	void CtpTd::qryPosition()
@@ -1016,7 +1044,11 @@ namespace cktrader {
 		memset(&myreq, 0, sizeof(myreq));
 		strncpy(myreq.BrokerID, brokerID.c_str(), sizeof(myreq.BrokerID) - 1);
 		strncpy(myreq.InvestorID, userID.c_str(), sizeof(myreq.InvestorID) - 1);
-		this->api->ReqQryInvestorPosition(&myreq, reqID);
+
+		if (this->api)
+		{
+			this->api->ReqQryInvestorPosition(&myreq, reqID);
+		}
 	}
 
 	std::string CtpTd::sendOrder(OrderReq& req)
@@ -1036,6 +1068,7 @@ namespace cktrader {
 
 		myreq.LimitPrice = req.price;
 		myreq.VolumeTotalOriginal = req.volume;
+
 		if (req.priceType == PRICETYPE_LIMITPRICE)
 		{
 			myreq.OrderPriceType = THOST_FTDC_OPT_LimitPrice;
@@ -1043,6 +1076,18 @@ namespace cktrader {
 		if (req.priceType == PRICETYPE_MARKETPRICE)
 		{
 			myreq.OrderPriceType = THOST_FTDC_OPT_AnyPrice;
+		}
+		if (req.priceType == PRICETYPE_FAK)
+		{
+			myreq.OrderPriceType = THOST_FTDC_OPT_LimitPrice;
+			myreq.TimeCondition = THOST_FTDC_TC_IOC;
+			myreq.VolumeCondition = THOST_FTDC_VC_AV;
+		}
+		if (req.priceType == PRICETYPE_FOK)
+		{
+			myreq.OrderPriceType = THOST_FTDC_OPT_LimitPrice;
+			myreq.TimeCondition = THOST_FTDC_TC_IOC;
+			myreq.VolumeCondition = THOST_FTDC_VC_CV;
 		}
 
 		if (req.direction == DIRECTION_LONG)
@@ -1078,19 +1123,6 @@ namespace cktrader {
 		myreq.TimeCondition = THOST_FTDC_TC_GFD;
 		myreq.VolumeCondition = THOST_FTDC_VC_AV;
 		myreq.MinVolume = 1;
-
-		if (req.priceType == PRICETYPE_FAK)
-		{
-			myreq.OrderPriceType = THOST_FTDC_OPT_LimitPrice;
-			myreq.TimeCondition = THOST_FTDC_TC_IOC;
-			myreq.VolumeCondition = THOST_FTDC_VC_AV;
-		}
-		if (req.priceType == PRICETYPE_FOK)
-		{
-			myreq.OrderPriceType = THOST_FTDC_OPT_LimitPrice;
-			myreq.TimeCondition = THOST_FTDC_TC_IOC;
-			myreq.VolumeCondition = THOST_FTDC_VC_CV;
-		}
 
 		this->api->ReqOrderInsert(&myreq, reqID);
 

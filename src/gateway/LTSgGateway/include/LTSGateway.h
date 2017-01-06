@@ -18,7 +18,7 @@ namespace cktrader {
 	CAPI_CKTRADER
 	{
 		CK_EXPORTS  IGateway* CreateGateway(EventEngine* pEvent,const char* x);
-		CK_EXPORTS int ReleaseGateway(IGateway*p);
+		CK_EXPORTS int ReleaseGateway();
 	}
 
 	class EventEngine;

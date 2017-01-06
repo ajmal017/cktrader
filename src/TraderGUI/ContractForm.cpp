@@ -47,6 +47,9 @@ ContractForm::~ContractForm()
 
 void ContractForm::init()
 {
+	qRegisterMetaType<ContractData>("ContractData");
+	connect(this, SIGNAL(updateEvent(ContractData)), this, SLOT(updateContent(ContractData)));
+
 	this->serviceMgr->getEventEngine()->registerHandler(EVENT_CONTRACT, std::bind(&ContractForm::onContract, this, std::placeholders::_1), "ContractForm");
 }
 
@@ -78,13 +81,18 @@ void ContractForm::onContract(Datablk& contract)
 {
 	ContractData cn = contract.cast<ContractData>();
 
+	emit updateEvent(cn);
+}
+
+void ContractForm::updateContent(ContractData contract)
+{
 	QVariantMap vItem;
-	vItem.insert(QStringLiteral("合约代码"), codec->toUnicode(cn.symbol.c_str()));
-	vItem.insert(QStringLiteral("交易所"), codec->toUnicode(cn.exchange.c_str()));
-	vItem.insert(QStringLiteral("合约名称"), codec->toUnicode(cn.name.c_str()));
-	vItem.insert(QStringLiteral("合约类型"), codec->toUnicode(cn.productClass.c_str()));
-	vItem.insert(QStringLiteral("价格变动单位"), cn.priceTick);
-	vItem.insert(QStringLiteral("大小"), cn.size);
+	vItem.insert(QStringLiteral("合约代码"), codec->toUnicode(contract.symbol.c_str()));
+	vItem.insert(QStringLiteral("交易所"), codec->toUnicode(contract.exchange.c_str()));
+	vItem.insert(QStringLiteral("合约名称"), codec->toUnicode(contract.name.c_str()));
+	vItem.insert(QStringLiteral("合约类型"), codec->toUnicode(contract.productClass.c_str()));
+	vItem.insert(QStringLiteral("价格变动单位"), contract.priceTick);
+	vItem.insert(QStringLiteral("大小"), contract.size);
 
 	//根据id找到对应的行，然后用列的text来在map里面取值设置到item里面=
 	QString id = vItem.value(QStringLiteral("合约名称")).toString();
@@ -100,8 +108,9 @@ void ContractForm::onContract(Datablk& contract)
 				str_val = QString().sprintf("%6.3f", raw_val.toDouble());
 			}
 
-			QTableWidgetItem* item = new QTableWidgetItem(str_val);
-			ui->ContractTableWidget->setItem(row, i, item);
+			ui->ContractTableWidget->item(row, i)->setText(str_val);
+			//QTableWidgetItem* item = new QTableWidgetItem(str_val);
+			//ui->ContractTableWidget->setItem(row, i, item);
 		}
 	}
 	else

@@ -31,6 +31,11 @@ public:
 private:
 	void adjustTableWidget(QTableWidget* tableWidget);
 
+signals:
+	void updateEvent(LogData log);
+
+private slots:
+	void updateContent(LogData log);
 
 private:
 	Ui::LogForm* ui;

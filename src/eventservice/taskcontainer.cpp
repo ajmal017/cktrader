@@ -31,7 +31,11 @@ Task TaskContainer::wait_and_get_task()
 	Task t;
 
 	//取消循环，这里是否有问题？如果item读取不成功，t是什么？
-	std::string type = read_task_queue();
+	std::string type;
+	do
+	{
+		type = read_task_queue();
+	} while ((!type.empty()));
 
 	MapItem* item = read_task_map(type);
 	if (item)
@@ -61,13 +65,12 @@ void TaskContainer::task_run_end(std::string task_type)
 std::string TaskContainer::read_task_queue()
 {
 	//等待队列有数据??
-	std::string type;
+	std::string type ;
 
 	if (task_handler_queue->try_dequeue(type))
 	{
 		return type;
 	}
-
 	task_type_queue->wait_dequeue(type);
 	return type;
 }
@@ -100,6 +103,11 @@ MapItem* TaskContainer::read_task_map(std::string type)
 		item = it->second;
 	}
 	return item;
+}
+
+size_t TaskContainer::task_count()
+{
+	return task_handler_queue->size_approx() + task_type_queue->size_approx();
 }
 
 }//cktrader

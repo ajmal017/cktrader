@@ -46,20 +46,20 @@ TraderGUI::TraderGUI(cktrader::ServiceMgr* mgr, QWidget *parent)
 	logForm_ = new LogForm(mgr,this);
 	ui->tabLeft->addTab(logForm_, QStringLiteral("日志"));
 
-	errorForm_ = new ErrorForm(this);
+	errorForm_ = new ErrorForm(mgr, this);
 	ui->tabLeft->addTab(errorForm_, QStringLiteral("错误"));
 
-	accountForm_ = new AccountForm(this);
+	accountForm_ = new AccountForm(mgr, this);
 	ui->tabLeft->addTab(accountForm_, QStringLiteral("账户"));
 
 
-	tradeForm_ = new TradeForm(this);
+	tradeForm_ = new TradeForm(mgr, this);
 	ui->tabRight->addTab(tradeForm_, QStringLiteral("成交"));
 
-	orderForm_ = new OrderForm(this);
+	orderForm_ = new OrderForm(mgr, this);
 	ui->tabRight->addTab(orderForm_, QStringLiteral("委托"));
 
-	positionForm_ = new PositionForm(this);
+	positionForm_ = new PositionForm(mgr, this);
 	ui->tabRight->addTab(positionForm_, QStringLiteral("持仓"));
 
 	ui->strategy_widget->resize(300, height());
@@ -143,6 +143,8 @@ void TraderGUI::init()
 	connect(ui->ctpActionConfig, SIGNAL(triggered()), this, SLOT(ctpActionConfig_triggered()));
 	connect(ui->ctpActionLogin, SIGNAL(triggered()), this, SLOT(ctpActionLogin_triggered()));
 	connect(ui->ctpActionLogout, SIGNAL(triggered()), this, SLOT(ctpActionLogout_triggered()));
+
+	connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(quit()));
 
 	tickForm_->init();
 	contractForm_->init();
@@ -286,5 +288,10 @@ void TraderGUI::ibActionLogout_triggered()
 void TraderGUI::ibActionConfig_triggered()
 {
 
+}
+
+void TraderGUI::quit()
+{
+	close();
 }
 

@@ -147,12 +147,12 @@ struct CK_EXPORTS PositionData
 	std::string tSymbol;
 	std::string direction;
 	double position;
-	int frozen;
+	double frozen;
 	double price;
 	std::string tPositionName;
-	int ydPosition;
+	double ydPosition;
 	std::string gateWayName;
-	int todayPosition;
+	double todayPosition;
 	double todayPositionCost;
 	double ydPositionCost;
 };

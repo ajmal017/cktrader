@@ -3,11 +3,21 @@
 #include "NoFocusDelegate.h"
 #include "qstring.h"
 
-AccountForm::AccountForm(QWidget* parent)
+#include "servicemgr_iml.h"
+
+#include <QTextCodec>
+
+using namespace cktrader;
+
+AccountForm::AccountForm(cktrader::ServiceMgr* serviceMgr, QWidget* parent)
 	:QWidget(parent)
 	, ui(new Ui::AccountForm)
 {
 	ui->setupUi(this);
+
+	this->serviceMgr = serviceMgr;
+
+	codec = QTextCodec::codecForName("gbk");
 
 	//设置列=
 	table_col_ << QStringLiteral("账户")
@@ -37,12 +47,9 @@ AccountForm::~AccountForm()
 
 void AccountForm::init()
 {
-
-}
-
-void AccountForm::shutdown()
-{
-
+	qRegisterMetaType<AccountData>("AccountData");
+	connect(this, SIGNAL(updateEvent(AccountData)), this, SLOT(updateContent(AccountData)));
+	this->serviceMgr->getEventEngine()->registerHandler(EVENT_ACCOUNT, std::bind(&AccountForm::onAccount, this, std::placeholders::_1), "AccountForm");
 }
 
 void AccountForm::adjustTableWidget(QTableWidget* tableWidget)
@@ -67,4 +74,76 @@ void AccountForm::adjustTableWidget(QTableWidget* tableWidget)
 																	   //tableWidget->setSelectionMode(QAbstractItemView::ExtendedSelection); //可多选多行=
 	tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows); //设置选择行为时每次选择一行=
 	tableWidget->setItemDelegate(new NoFocusDelegate()); // 去鼠标点击出现的虚框=
+}
+
+void AccountForm::onAccount(Datablk& account)
+{
+	AccountData ac = account.cast<AccountData>();
+
+	emit updateEvent(ac);
+}
+
+void AccountForm::updateContent(AccountData ac)
+{
+	QVariantMap vItem;
+	vItem.insert(QStringLiteral("账户"), codec->toUnicode(ac.accountID.c_str()));
+
+	vItem.insert(QStringLiteral("昨结"), ac.preBalance);
+	vItem.insert(QStringLiteral("净值"), ac.balance);
+
+	if (ac.available<=0)
+	{
+		vItem.insert(QStringLiteral("可用"), 0);
+	}
+	else
+	{
+		vItem.insert(QStringLiteral("可用"), ac.available);
+	}
+	
+	vItem.insert(QStringLiteral("手续费"), ac.commission);
+	vItem.insert(QStringLiteral("保证金"), ac.margin);
+	vItem.insert(QStringLiteral("平仓盈亏"), ac.closeProfit);
+	vItem.insert(QStringLiteral("持仓盈亏"), ac.positionProfit);
+	vItem.insert(QStringLiteral("接口"), codec->toUnicode(ac.gateWayName.c_str()));
+
+
+	//根据id找到对应的行，然后用列的text来在map里面取值设置到item里面=
+	QString id = vItem.value(QStringLiteral("账户")).toString();
+	if (table_row_.contains(id))
+	{
+		int row = table_row_.value(id);
+		for (int i = 0; i < table_col_.count(); i++)
+		{
+			QVariant raw_val = vItem.value(table_col_.at(i));
+			QString str_val = raw_val.toString();
+			if (raw_val.type() == QMetaType::Double || raw_val.type() == QMetaType::Float)
+			{
+				str_val = QString().sprintf("%6.3f", raw_val.toDouble());
+			}
+
+			ui->accountTableWidget->item(row, i)->setText(str_val);
+
+			//QTableWidgetItem* item = new QTableWidgetItem(str_val);
+			//ui->tickTable->setItem(row, i, item);
+		}
+	}
+	else
+	{
+		int row = table_row_.size();
+		ui->accountTableWidget->insertRow(row);
+		table_row_.insert(id, row);
+
+		for (int i = 0; i < table_col_.count(); i++)
+		{
+			QVariant raw_val = vItem.value(table_col_.at(i));
+			QString str_val = raw_val.toString();
+			if (raw_val.type() == QMetaType::Double || raw_val.type() == QMetaType::Float)
+			{
+				str_val = QString().sprintf("%6.3f", raw_val.toDouble());
+			}
+
+			QTableWidgetItem* item = new QTableWidgetItem(str_val);
+			ui->accountTableWidget->setItem(row, i, item);
+		}
+	}
 }

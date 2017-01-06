@@ -32,9 +32,10 @@ int main(int argc, char *argv[])
 
 	TraderGUI w(&service);
 	w.init();
-	w.move((QApplication::desktop()->width() - w.width()) / 2, (QApplication::desktop()->height() - w.height()) / 3);
-	//w.show();
-	w.showMaximized();
+	w.resize(QApplication::desktop()->width()/1.2, w.height());
+	w.move((QApplication::desktop()->width() - w.width())/2, (QApplication::desktop()->height() - w.height()) /3);
+	w.show();
+	//w.showMaximized();
 
 	result = a.exec();
 

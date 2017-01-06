@@ -6,6 +6,7 @@
 
 #include <QMessageBox>
 #include <QTextCodec>
+#include <QMetaType>
 
 using namespace cktrader;
 
@@ -62,10 +63,13 @@ TickForm::~TickForm()
 
 void TickForm::init()
 {
+	qRegisterMetaType<TickData>("TickData");
+
 	this->serviceMgr->getEventEngine()->registerHandler(EVENT_TICK, std::bind(&TickForm::onTick, this, std::placeholders::_1), "TickForm");
 	connect(ui->tickTable, SIGNAL(cellClicked(int, int)), this, SLOT(tableWidget_cellClicked(int, int)));
 	connect(ui->orderPushButton,SIGNAL(clicked()), this, SLOT(pushButtonSendOrder_clicked()));
 	connect(ui->contractLineEdit, SIGNAL(returnPressed()), this, SLOT(contractlineedit_returnPressed()));
+	connect(this, SIGNAL(updateEvent(TickData)), this, SLOT(updateContent(TickData)));
 }
 
 void TickForm::adjustTableWidget(QTableWidget* tableWidget)
@@ -96,65 +100,7 @@ void TickForm::onTick(Datablk& tick)
 {
 	TickData tick_data = tick.cast<TickData>();
 
-	QVariantMap vItem;
-	vItem.insert(QStringLiteral("合约代码"), codec->toUnicode(tick_data.symbol.c_str()));
-	// tick里面的exchange不一定有=
-	ContractData contract;
-	serviceMgr->getContract(tick_data.symbol, contract);
-	vItem.insert(QStringLiteral("合约名称"), codec->toUnicode(contract.name.c_str()));
-	vItem.insert(QStringLiteral("最新价"), tick_data.lastPrice);
-	vItem.insert(QStringLiteral("成交量"), tick_data.volume);
-	vItem.insert(QStringLiteral("买一价"), tick_data.bidPrice1);
-	vItem.insert(QStringLiteral("买一量"), tick_data.bidVolume1);
-	vItem.insert(QStringLiteral("卖一价"), tick_data.askPrice1);
-	vItem.insert(QStringLiteral("卖一量"), tick_data.askVolume1);
-	vItem.insert(QStringLiteral("持仓量"), tick_data.openInterest);
-	vItem.insert(QStringLiteral("开盘价"), tick_data.openPrice);
-	vItem.insert(QStringLiteral("最高价"), tick_data.highPrice);
-	vItem.insert(QStringLiteral("最低价"), tick_data.lowPrice);
-	vItem.insert(QStringLiteral("时间"), codec->toUnicode(tick_data.time.c_str()));
-	vItem.insert(QStringLiteral("涨停价"), tick_data.upperLimit);
-	vItem.insert(QStringLiteral("跌停价"), tick_data.lowerLimit);
-	vItem.insert(QStringLiteral("接口"), codec->toUnicode(tick_data.gateWayName.c_str()));
-
-	//根据id找到对应的行，然后用列的text来在map里面取值设置到item里面=
-	QString id = vItem.value(QStringLiteral("合约名称")).toString();
-	if (table_row_.contains(id))
-	{
-		int row = table_row_.value(id);
-		for (int i = 0; i < table_col_.count(); i++)
-		{
-			QVariant raw_val = vItem.value(table_col_.at(i));
-			QString str_val = raw_val.toString();
-			if (raw_val.type() == QMetaType::Double || raw_val.type() == QMetaType::Float)
-			{
-				str_val = QString().sprintf("%6.3f", raw_val.toDouble());
-			}
-
-			QTableWidgetItem* item = new QTableWidgetItem(str_val);
-			ui->tickTable->setItem(row, i, item);
-		}
-	}
-	else
-	{
-		int row = table_row_.size();
-		ui->tickTable->insertRow(row);
-		table_row_.insert(id, row);
-
-		for (int i = 0; i < table_col_.count(); i++)
-		{
-			QVariant raw_val = vItem.value(table_col_.at(i));
-			QString str_val = raw_val.toString();
-			if (raw_val.type() == QMetaType::Double || raw_val.type() == QMetaType::Float)
-			{
-				str_val = QString().sprintf("%6.3f", raw_val.toDouble());
-			}
-
-			QTableWidgetItem* item = new QTableWidgetItem(str_val);
-			ui->tickTable->setItem(row, i, item);
-		}
-	}
-	
+	emit updateEvent(tick_data);
 }
 
 void TickForm::pushButtonSendOrder_clicked()
@@ -163,22 +109,25 @@ void TickForm::pushButtonSendOrder_clicked()
 	double price = ui->priceDoubleSpinBox->value();
 	double volume = ui->volDoubleSpinBox->value();
 
-	QString priceType = ui->priceTypeComboBox->currentData().toString();
-	QString direction = ui->directionComboBox->currentData().toString();
-	QString offset = ui->offsetComboBox->currentData().toString();
-	QString currency = ui->currencyComboBox->currentData().toString();
+	QString priceType = ui->priceTypeComboBox->currentText();
+	QString direction = ui->directionComboBox->currentText();
+	QString offset = ui->offsetComboBox->currentText();
+	QString currency = ui->currencyComboBox->currentText();
 
 	OrderReq req;
-	req.symbol = symbol.toStdString();
+	req.symbol = symbol.toLocal8Bit().toStdString();
+
 	ContractData cn;
 	serviceMgr->getContract(req.symbol, cn);
-
 	req.exchange = cn.exchange;
+
 	req.price = price;
 	req.volume = volume;
-	req.priceType = priceType.toStdString();
-	req.direction = offset.toStdString();
-	req.currency = currency.toStdString();
+	//req.priceType = priceType.toStdString();
+	req.priceType = priceType.toLocal8Bit().toStdString();
+	req.direction = direction.toLocal8Bit().toStdString();
+	req.offset = offset.toLocal8Bit().toStdString();
+	req.currency = currency.toLocal8Bit().toStdString();
 
 	IGateway* pGateway = serviceMgr->getGateWay(cn.gateWayName);
 
@@ -241,5 +190,69 @@ void  TickForm::contractlineedit_returnPressed()
 	else
 	{
 		QMessageBox::warning(this, QStringLiteral("错误"), QStringLiteral("没有此合约"));
+	}
+}
+
+void TickForm::updateContent(TickData tick)
+{
+	QVariantMap vItem;
+	vItem.insert(QStringLiteral("合约代码"), codec->toUnicode(tick.symbol.c_str()));
+	// tick里面的exchange不一定有=
+	ContractData contract;
+	serviceMgr->getContract(tick.symbol, contract);
+	vItem.insert(QStringLiteral("合约名称"), codec->toUnicode(contract.name.c_str()));
+	vItem.insert(QStringLiteral("最新价"), tick.lastPrice);
+	vItem.insert(QStringLiteral("成交量"), tick.volume);
+	vItem.insert(QStringLiteral("买一价"), tick.bidPrice1);
+	vItem.insert(QStringLiteral("买一量"), tick.bidVolume1);
+	vItem.insert(QStringLiteral("卖一价"), tick.askPrice1);
+	vItem.insert(QStringLiteral("卖一量"), tick.askVolume1);
+	vItem.insert(QStringLiteral("持仓量"), tick.openInterest);
+	vItem.insert(QStringLiteral("开盘价"), tick.openPrice);
+	vItem.insert(QStringLiteral("最高价"), tick.highPrice);
+	vItem.insert(QStringLiteral("最低价"), tick.lowPrice);
+	vItem.insert(QStringLiteral("时间"), codec->toUnicode(tick.time.c_str()));
+	vItem.insert(QStringLiteral("涨停价"), tick.upperLimit);
+	vItem.insert(QStringLiteral("跌停价"), tick.lowerLimit);
+	vItem.insert(QStringLiteral("接口"), codec->toUnicode(tick.gateWayName.c_str()));
+
+	//根据id找到对应的行，然后用列的text来在map里面取值设置到item里面=
+	QString id = vItem.value(QStringLiteral("合约名称")).toString();
+	if (table_row_.contains(id))
+	{
+		int row = table_row_.value(id);
+		for (int i = 0; i < table_col_.count(); i++)
+		{
+			QVariant raw_val = vItem.value(table_col_.at(i));
+			QString str_val = raw_val.toString();
+			if (raw_val.type() == QMetaType::Double || raw_val.type() == QMetaType::Float)
+			{
+				str_val = QString().sprintf("%6.3f", raw_val.toDouble());
+			}
+
+			ui->tickTable->item(row, i)->setText(str_val);
+
+			//QTableWidgetItem* item = new QTableWidgetItem(str_val);
+			//ui->tickTable->setItem(row, i, item);
+		}
+	}
+	else
+	{
+		int row = table_row_.size();
+		ui->tickTable->insertRow(row);
+		table_row_.insert(id, row);
+
+		for (int i = 0; i < table_col_.count(); i++)
+		{
+			QVariant raw_val = vItem.value(table_col_.at(i));
+			QString str_val = raw_val.toString();
+			if (raw_val.type() == QMetaType::Double || raw_val.type() == QMetaType::Float)
+			{
+				str_val = QString().sprintf("%6.3f", raw_val.toDouble());
+			}
+
+			QTableWidgetItem* item = new QTableWidgetItem(str_val);
+			ui->tickTable->setItem(row, i, item);
+		}
 	}
 }

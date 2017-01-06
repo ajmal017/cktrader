@@ -14,7 +14,7 @@ namespace cktrader {
 		return g_ltsGateway;
 	}
 
-	CK_EXPORTS int ReleaseGateway(IGateway*p)
+	CK_EXPORTS int ReleaseGateway()
 	{
 		if (g_ltsGateway)
 		{

@@ -40,20 +40,6 @@ ServiceMgr::ServiceMgr(ServiceMgr& mgr):the_mutex()
 }
 ServiceMgr::~ServiceMgr()
 {
-	if (m_DLLMap)
-	{
-		for (std::map<std::string, CDllHelper*>::iterator it = m_DLLMap->begin(); it != m_DLLMap->end(); ++it)
-		{
-			if (it->second)
-			{
-				delete it->second;
-			}
-		}	
-
-		delete m_DLLMap;
-		m_DLLMap = nullptr;
-	}
-
 	if (m_GateWayMap)
 	{
 		for (std::map<std::string, IGateway*>::iterator it = m_GateWayMap->begin(); it != m_GateWayMap->end(); ++it)
@@ -67,6 +53,20 @@ ServiceMgr::~ServiceMgr()
 		delete m_GateWayMap;
 		m_GateWayMap = nullptr;
 	}
+
+	if (m_DLLMap)
+	{
+		for (std::map<std::string, CDllHelper*>::iterator it = m_DLLMap->begin(); it != m_DLLMap->end(); ++it)
+		{
+			if (it->second)
+			{
+				delete it->second;
+			}
+		}	
+
+		delete m_DLLMap;
+		m_DLLMap = nullptr;
+	}	
 
 	if (m_StrategyMap)
 	{

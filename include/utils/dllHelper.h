@@ -12,7 +12,8 @@
 class CDllHelper
 {
 private:
-	char					m_szFileName[_MAX_DIR];                  // 文件名
+	char m_szFileName[_MAX_DIR];                  // 文件名
+
 #if defined WINDOWS || _WIN32
     HMODULE					m_hLibrary;                    // 模块句柄
 #else
@@ -31,7 +32,7 @@ protected:
 #if defined WINDOWS || _WIN32
 		m_hLibrary =  LoadLibraryExA(m_szFileName, nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
 #else
-		return dlopen(libPath, RTLD_NOW);
+		return dlopen(m_szFileName, RTLD_NOW);
 #endif		
 	}
 
@@ -45,7 +46,7 @@ protected:
 #if defined WINDOWS || _WIN32
 		FreeLibrary(m_hLibrary);
 #else
-		dlclose(lib);
+		dlclose(m_hLibrary);
 #endif
 	}
 
@@ -69,7 +70,7 @@ public:
 public:
     // 获取Proc
 	template<typename Proc>
-	Proc GetProcedure(LPCSTR lpszProc)
+	Proc GetProcedure(char* lpszProc)
 	{
 		if (m_hLibrary == NULL)
 		{

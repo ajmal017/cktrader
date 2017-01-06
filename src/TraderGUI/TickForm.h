@@ -39,6 +39,11 @@ private slots:
 	void tableWidget_cellClicked(int row, int column);
 	void contractlineedit_returnPressed();
 
+	void updateContent(TickData tick);
+
+signals:
+	void updateEvent(TickData tick);
+
 private:
 	Ui::TickForm* ui;
 

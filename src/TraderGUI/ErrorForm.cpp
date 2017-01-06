@@ -3,11 +3,21 @@
 #include "NoFocusDelegate.h"
 #include "qstring.h"
 
-ErrorForm::ErrorForm(QWidget* parent)
+#include "servicemgr_iml.h"
+
+#include <QTextCodec>
+
+using namespace cktrader;
+
+ErrorForm::ErrorForm(cktrader::ServiceMgr* serviceMgr,QWidget* parent)
 	:QWidget(parent)
 	, ui(new Ui::ErrorForm)
 {
 	ui->setupUi(this);
+
+	this->serviceMgr = serviceMgr;
+
+	codec = QTextCodec::codecForName("gbk");
 
 	//设置列=
 	table_col_ << QStringLiteral("错误编号")
@@ -31,19 +41,17 @@ ErrorForm::~ErrorForm()
 
 void ErrorForm::init()
 {
+	qRegisterMetaType<ErrorData>("ErrorData");
+	connect(this, SIGNAL(updateEvent(ErrorData)), this, SLOT(updateContent(ErrorData)));
 
-}
-
-void ErrorForm::shutdown()
-{
-
+	this->serviceMgr->getEventEngine()->registerHandler(EVENT_ERROR, std::bind(&ErrorForm::onError, this, std::placeholders::_1), "ErrorForm");
 }
 
 void ErrorForm::adjustTableWidget(QTableWidget* tableWidget)
 {
 	tableWidget->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft); //设置列左对齐=
 	tableWidget->horizontalHeader()->setStretchLastSection(true); //最后一览自适应宽度=
-																  //tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents); //自适应列宽，不能拖动，会很卡=
+	tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents); //自适应列宽，不能拖动，会很卡=
 																  //tableWidget->horizontalHeader()->setDefaultSectionSize(150); //缺省列宽=
 	tableWidget->horizontalHeader()->setSectionsClickable(false); //设置表头不可点击=
 	tableWidget->horizontalHeader()->setSectionsMovable(false); //设置表头不可点击=
@@ -61,4 +69,26 @@ void ErrorForm::adjustTableWidget(QTableWidget* tableWidget)
 																	   //tableWidget->setSelectionMode(QAbstractItemView::ExtendedSelection); //可多选多行=
 	tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows); //设置选择行为时每次选择一行=
 	tableWidget->setItemDelegate(new NoFocusDelegate()); // 去鼠标点击出现的虚框=
+}
+
+
+void ErrorForm::onError(Datablk& error)
+{
+	ErrorData er = error.cast<ErrorData>();
+
+	emit updateEvent(er);
+}
+
+void ErrorForm::updateContent(ErrorData er)
+{
+	ui->errorTableWidget->insertRow(0);
+
+	QString id = codec->toUnicode(er.errorID.c_str());
+	QString content = codec->toUnicode(er.errorMsg.c_str());
+	QString gate = codec->toUnicode(er.gateWayName.c_str());
+	ui->errorTableWidget->setItem(0, 0, new QTableWidgetItem(id));
+	ui->errorTableWidget->setItem(0, 1, new QTableWidgetItem(content));
+	ui->errorTableWidget->setItem(0, 2, new QTableWidgetItem(gate));
+
+	ui->errorTableWidget->horizontalHeader()->resizeSections(QHeaderView::ResizeToContents);
 }

@@ -32,7 +32,10 @@ private:
 	void adjustTableWidget(QTableWidget* tableWidget);
 
 private slots:
+	void updateContent(ContractData contract);
 
+signals:
+	void updateEvent(ContractData contract);
 
 private:
 	Ui::ContractForm* ui;

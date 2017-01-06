@@ -3,16 +3,23 @@
 #include "NoFocusDelegate.h"
 #include "qstring.h"
 
-OrderForm::OrderForm(QWidget* parent)
+#include "servicemgr_iml.h"
+
+#include <QTextCodec>
+
+OrderForm::OrderForm(cktrader::ServiceMgr* serviceMgr,QWidget* parent)
 	:QWidget(parent)
 	, ui(new Ui::OrderForm)
 {
 	ui->setupUi(this);
 
+	this->serviceMgr = serviceMgr;
+
+	codec = QTextCodec::codecForName("gbk");
+
 	//设置列=
 	table_col_ << QStringLiteral("委托编号")
 		<< QStringLiteral("合约代码")
-		<< QStringLiteral("名称")
 		<< QStringLiteral("方向")
 		<< QStringLiteral("开平")
 		<< QStringLiteral("价格")
@@ -41,12 +48,9 @@ OrderForm::~OrderForm()
 
 void OrderForm::init()
 {
-
-}
-
-void OrderForm::shutdown()
-{
-
+	qRegisterMetaType<OrderData>("OrderData");
+	connect(this, SIGNAL(updateEvent(OrderData)), this, SLOT(updateContent(OrderData)));
+	this->serviceMgr->getEventEngine()->registerHandler(EVENT_ORDER, std::bind(&OrderForm::onOrder, this, std::placeholders::_1), "OrderForm");
 }
 
 void OrderForm::adjustTableWidget(QTableWidget* tableWidget)
@@ -71,4 +75,70 @@ void OrderForm::adjustTableWidget(QTableWidget* tableWidget)
 																	   //tableWidget->setSelectionMode(QAbstractItemView::ExtendedSelection); //可多选多行=
 	tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows); //设置选择行为时每次选择一行=
 	tableWidget->setItemDelegate(new NoFocusDelegate()); // 去鼠标点击出现的虚框=
+}
+
+void OrderForm::onOrder(Datablk& or )
+{
+	OrderData order = or .cast<OrderData>();
+
+	emit updateEvent(order);
+}
+
+void OrderForm::updateContent(OrderData order)
+{
+	QVariantMap vItem;
+	vItem.insert(QStringLiteral("委托编号"), codec->toUnicode(order.orderID.c_str()));
+
+	vItem.insert(QStringLiteral("合约代码"), codec->toUnicode(order.symbol.c_str()));
+	vItem.insert(QStringLiteral("方向"), codec->toUnicode(order.direction.c_str()));
+	vItem.insert(QStringLiteral("开平"), codec->toUnicode(order.offset.c_str()));
+	vItem.insert(QStringLiteral("价格"), order.price);
+	vItem.insert(QStringLiteral("委托数量"), order.totalVolume);
+	vItem.insert(QStringLiteral("成交数量"), order.tradedVolume);
+	vItem.insert(QStringLiteral("状态"), codec->toUnicode(order.status.c_str()));
+	vItem.insert(QStringLiteral("撤销时间"), codec->toUnicode(order.cancelTime.c_str()));
+	vItem.insert(QStringLiteral("前置编号"), order.frontID);
+	vItem.insert(QStringLiteral("会话编号"), order.sessionID);
+	vItem.insert(QStringLiteral("接口"), codec->toUnicode(order.gateWayName.c_str()));
+
+
+	//根据id找到对应的行，然后用列的text来在map里面取值设置到item里面=
+	QString id = vItem.value(QStringLiteral("委托编号")).toString();
+	if (table_row_.contains(id))
+	{
+		int row = table_row_.value(id);
+		for (int i = 0; i < table_col_.count(); i++)
+		{
+			QVariant raw_val = vItem.value(table_col_.at(i));
+			QString str_val = raw_val.toString();
+			if (raw_val.type() == QMetaType::Double || raw_val.type() == QMetaType::Float)
+			{
+				str_val = QString().sprintf("%6.3f", raw_val.toDouble());
+			}
+
+			ui->orderTableWidget->item(row, i)->setText(str_val);
+
+			//QTableWidgetItem* item = new QTableWidgetItem(str_val);
+			//ui->tickTable->setItem(row, i, item);
+		}
+	}
+	else
+	{
+		int row = table_row_.size();
+		ui->orderTableWidget->insertRow(row);
+		table_row_.insert(id, row);
+
+		for (int i = 0; i < table_col_.count(); i++)
+		{
+			QVariant raw_val = vItem.value(table_col_.at(i));
+			QString str_val = raw_val.toString();
+			if (raw_val.type() == QMetaType::Double || raw_val.type() == QMetaType::Float)
+			{
+				str_val = QString().sprintf("%6.3f", raw_val.toDouble());
+			}
+
+			QTableWidgetItem* item = new QTableWidgetItem(str_val);
+			ui->orderTableWidget->setItem(row, i, item);
+		}
+	}
 }
