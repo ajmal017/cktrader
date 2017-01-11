@@ -17,7 +17,7 @@ using namespace cktrader;
 CAPI_CKTRADER
 {
 	CK_EXPORTS IStrategy* CreateStrategy(IServiceMgr*, const char*);
-	CK_EXPORTS int ReleaseStrategy(IStrategy*p);
+	CK_EXPORTS int ReleaseStrategy();
 }
 
 class CK_EXPORTS StrategyAtrRsi :public IStrategy

@@ -41,7 +41,7 @@ LogForm::~LogForm()
 void LogForm::init()
 {
 	qRegisterMetaType<LogData>("LogData");
-	connect(this, SIGNAL(updateEvent(LogData)),this, SLOT(updateContent(LogData)));
+	connect(this, SIGNAL(updateEvent(LogData)),this, SLOT(updateContent(LogData)), Qt::QueuedConnection);
 	this->serviceMgr->getEventEngine()->registerHandler(EVENT_LOG, std::bind(&LogForm::onLog, this, std::placeholders::_1), "LogForm");
 }
 

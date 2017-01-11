@@ -158,6 +158,7 @@ xcopy /r /y $(SolutionDir)Release\$(ProjectName).lib $(SolutionDir)lib\release</
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\eventservice\blockingconcurrentqueue.h" />
+    <ClInclude Include="..\..\include\eventservice\ConcurrentQueue.h" />
     <ClInclude Include="..\..\include\eventservice\eventengine.h" />
     <ClInclude Include="..\..\include\eventservice\fcmm.hpp" />
     <ClInclude Include="..\..\include\eventservice\MapItem.h" />

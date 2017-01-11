@@ -11,11 +11,13 @@
 
 namespace cktrader {
 
+//加载gateway
 typedef IGateway* (*CreateGateway)(EventEngine* pEvent,const char*);
-typedef int(*ReleaseGateway)(IGateway*p);
+typedef int(*ReleaseGateway)();
 
+//加载策略
 typedef IStrategy* (*CreateStrategy)(IServiceMgr*, const char*);
-typedef int(*ReleaseStrategy)(IStrategy*p);
+typedef int(*ReleaseStrategy)();
 
 class CK_EXPORTS ServiceMgr:public IServiceMgr
 {
@@ -48,7 +50,8 @@ protected:
 	bool writeFile(std::string fileName, std::stringstream& stringText);
 
 private:
-	std::map<std::string, CDllHelper*> *m_DLLMap = nullptr;//装载动态加载的dll
+	std::map<std::string, CDllHelper*> *m_GatewayDLLMap = nullptr;//装载动态加载gate的dll
+	std::map<std::string, CDllHelper*> *m_StrategyDLLMap = nullptr;//装载动态加载strategy的dll
 
 	std::map<std::string, IGateway*> *m_GateWayMap = nullptr;//装载gateway
 	

@@ -66,10 +66,10 @@ void TickForm::init()
 	qRegisterMetaType<TickData>("TickData");
 
 	this->serviceMgr->getEventEngine()->registerHandler(EVENT_TICK, std::bind(&TickForm::onTick, this, std::placeholders::_1), "TickForm");
-	connect(ui->tickTable, SIGNAL(cellClicked(int, int)), this, SLOT(tableWidget_cellClicked(int, int)));
-	connect(ui->orderPushButton,SIGNAL(clicked()), this, SLOT(pushButtonSendOrder_clicked()));
-	connect(ui->contractLineEdit, SIGNAL(returnPressed()), this, SLOT(contractlineedit_returnPressed()));
-	connect(this, SIGNAL(updateEvent(TickData)), this, SLOT(updateContent(TickData)));
+	connect(ui->tickTable, SIGNAL(cellClicked(int, int)), this, SLOT(tableWidget_cellClicked(int, int)), Qt::QueuedConnection);
+	connect(ui->orderPushButton,SIGNAL(clicked()), this, SLOT(pushButtonSendOrder_clicked()), Qt::QueuedConnection);
+	connect(ui->contractLineEdit, SIGNAL(returnPressed()), this, SLOT(contractlineedit_returnPressed()), Qt::QueuedConnection);
+	connect(this, SIGNAL(updateEvent(TickData)), this, SLOT(updateContent(TickData)), Qt::QueuedConnection);
 }
 
 void TickForm::adjustTableWidget(QTableWidget* tableWidget)
@@ -138,8 +138,7 @@ void TickForm::pushButtonSendOrder_clicked()
 	else
 	{
 		QStringList x;
-		x << cn.gateWayName.c_str()
-			<< QStringLiteral("不存在，请确认是否登录");
+		x << QStringLiteral("合约不存在，请确认是否获取了合约");
 
 		QMessageBox::critical(this, QStringLiteral("未找到Gateway"),x.join(","));
 	}
@@ -150,19 +149,19 @@ void TickForm::tableWidget_cellClicked(int row, int column)
 	(void)column;
 
 	QString symbol = ui->tickTable->item(row, table_col_.indexOf(QStringLiteral("合约代码")))->text();
-	auto item = ui->tickTable->item(row, table_col_.indexOf(QStringLiteral("最新价")));
-	double lastPrice = item ? item->text().toDouble() : 0.0;
-	item = ui->tickTable->item(row, table_col_.indexOf(QStringLiteral("涨停价")));
-	double upperLimit = item ? item->text().toDouble() : 0.0;
-	item = ui->tickTable->item(row, table_col_.indexOf(QStringLiteral("跌停价")));
-	double lowerLimit = item ? item->text().toDouble() : 0.0;
+	auto itemPrice = ui->tickTable->item(row, table_col_.indexOf(QStringLiteral("最新价")));
+	double lastPrice = itemPrice ? itemPrice->text().toDouble() : 0.0;
+	auto itemUper = ui->tickTable->item(row, table_col_.indexOf(QStringLiteral("涨停价")));
+	double upperLimit = itemUper ? itemUper->text().toDouble() : 0.0;
+	auto itemLower = ui->tickTable->item(row, table_col_.indexOf(QStringLiteral("跌停价")));
+	double lowerLimit = itemLower ? itemLower->text().toDouble() : 0.0;
 
 	ui->contractLineEdit->setText(symbol);
 
-	//设置price
-	ui->priceDoubleSpinBox->setValue(lastPrice);
+	//设置price	
 	ui->priceDoubleSpinBox->setMaximum(upperLimit);
 	ui->priceDoubleSpinBox->setMinimum(lowerLimit);
+	ui->priceDoubleSpinBox->setValue(lastPrice);
 
 	ContractData cn;
 	bool havecontract = serviceMgr->getContract(symbol.toStdString(), cn);
@@ -255,4 +254,6 @@ void TickForm::updateContent(TickData tick)
 			ui->tickTable->setItem(row, i, item);
 		}
 	}
+
+	ui->tickTable->horizontalHeader()->resizeSections(QHeaderView::ResizeToContents);
 }

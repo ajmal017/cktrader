@@ -9,7 +9,8 @@ namespace cktrader {
 
 ServiceMgr::ServiceMgr():the_mutex()
 {
-	m_DLLMap = new std::map<std::string, CDllHelper*>;//装载动态加载的dll
+	m_GatewayDLLMap = new std::map<std::string, CDllHelper*>;//装载动态加载的dll
+	m_StrategyDLLMap = new std::map<std::string, CDllHelper*>;//装载动态加载的dll
 
 	m_GateWayMap = new std::map<std::string, IGateway*>;//装载gateway
 
@@ -23,9 +24,14 @@ ServiceMgr::ServiceMgr():the_mutex()
 
 ServiceMgr::ServiceMgr(ServiceMgr& mgr):the_mutex()
 {
-	for (std::map<std::string, CDllHelper*>::iterator it = mgr.m_DLLMap->begin(); it != mgr.m_DLLMap->end(); ++it)
+	for (std::map<std::string, CDllHelper*>::iterator it = mgr.m_GatewayDLLMap->begin(); it != mgr.m_GatewayDLLMap->end(); ++it)
 	{
-		m_DLLMap->insert(std::make_pair(it->first, it->second));
+		m_GatewayDLLMap->insert(std::make_pair(it->first, it->second));
+	}
+
+	for (std::map<std::string, CDllHelper*>::iterator it = mgr.m_StrategyDLLMap->begin(); it != mgr.m_StrategyDLLMap->end(); ++it)
+	{
+		m_StrategyDLLMap->insert(std::make_pair(it->first, it->second));
 	}
 
 	for (std::map<std::string, IGateway*>::iterator it = mgr.m_GateWayMap->begin(); it != mgr.m_GateWayMap->end(); ++it)
@@ -40,44 +46,55 @@ ServiceMgr::ServiceMgr(ServiceMgr& mgr):the_mutex()
 }
 ServiceMgr::~ServiceMgr()
 {
-	if (m_GateWayMap)
+	m_eventEngine->stopEngine();
+
+	//卸载dll
+	if (m_GatewayDLLMap)
 	{
-		for (std::map<std::string, IGateway*>::iterator it = m_GateWayMap->begin(); it != m_GateWayMap->end(); ++it)
+		for (std::map<std::string, CDllHelper*>::iterator it = m_GatewayDLLMap->begin(); it != m_GatewayDLLMap->end(); ++it)
 		{
 			if (it->second)
 			{
+				ReleaseGateway pfunc = it->second->GetProcedure<ReleaseGateway>("ReleaseGateway");
+				if (pfunc)
+				{
+					pfunc();
+				}
 				delete it->second;
 			}
 		}
 
-		delete m_GateWayMap;
-		m_GateWayMap = nullptr;
+		delete m_GatewayDLLMap;
+		m_GatewayDLLMap = nullptr;
 	}
 
-	if (m_DLLMap)
+	if (m_StrategyDLLMap)
 	{
-		for (std::map<std::string, CDllHelper*>::iterator it = m_DLLMap->begin(); it != m_DLLMap->end(); ++it)
+		for (std::map<std::string, CDllHelper*>::iterator it = m_StrategyDLLMap->begin(); it != m_StrategyDLLMap->end(); ++it)
 		{
 			if (it->second)
 			{
+				ReleaseStrategy pfunc = it->second->GetProcedure<ReleaseStrategy>("ReleaseStrategy");
+				if (pfunc)
+				{
+					pfunc();
+				}
 				delete it->second;
 			}
-		}	
+		}
 
-		delete m_DLLMap;
-		m_DLLMap = nullptr;
+		delete m_StrategyDLLMap;
+		m_StrategyDLLMap = nullptr;
+	}
+
+	if (m_GateWayMap)
+	{		
+		delete m_GateWayMap;
+		m_GateWayMap = nullptr;
 	}	
 
 	if (m_StrategyMap)
 	{
-		for (std::map<std::string, IStrategy*>::iterator it = m_StrategyMap->begin(); it != m_StrategyMap->end(); ++it)
-		{
-			if (it->second)
-			{
-				delete it->second;
-			}
-		}
-
 		delete m_StrategyMap;
 		m_StrategyMap = nullptr;
 	}
@@ -100,7 +117,7 @@ IGateway* ServiceMgr::loadGateWay(std::string name, std::string path)
 	}
 
 	CDllHelper *_dll = new CDllHelper(path.c_str());
-	m_DLLMap->insert(std::make_pair(name, _dll));
+	m_GatewayDLLMap->insert(std::make_pair(name, _dll));
 
 	CreateGateway pfunc = _dll->GetProcedure<CreateGateway>("CreateGateway");
 	if (pfunc)
@@ -125,7 +142,7 @@ IStrategy* ServiceMgr::loadStrategy(std::string name,std::string path)
 	}
 
 	CDllHelper *_dll = new CDllHelper(_FTA(path.c_str()));
-	m_DLLMap->insert(std::make_pair(name, _dll));
+	m_StrategyDLLMap->insert(std::make_pair(name, _dll));
 
 	CreateStrategy pfunc = _dll->GetProcedure<CreateStrategy>("CreateStrategy");
 	if (pfunc)

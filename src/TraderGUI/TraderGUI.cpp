@@ -52,15 +52,14 @@ TraderGUI::TraderGUI(cktrader::ServiceMgr* mgr, QWidget *parent)
 	accountForm_ = new AccountForm(mgr, this);
 	ui->tabLeft->addTab(accountForm_, QStringLiteral("账户"));
 
-
-	tradeForm_ = new TradeForm(mgr, this);
-	ui->tabRight->addTab(tradeForm_, QStringLiteral("成交"));
+	positionForm_ = new PositionForm(mgr, this);
+	ui->tabRight->addTab(positionForm_, QStringLiteral("持仓"));
 
 	orderForm_ = new OrderForm(mgr, this);
 	ui->tabRight->addTab(orderForm_, QStringLiteral("委托"));
 
-	positionForm_ = new PositionForm(mgr, this);
-	ui->tabRight->addTab(positionForm_, QStringLiteral("持仓"));
+	tradeForm_ = new TradeForm(mgr, this);
+	ui->tabRight->addTab(tradeForm_, QStringLiteral("成交"));
 
 	ui->strategy_widget->resize(300, height());
 	ui->strategy_widget->setMinimumWidth(270);
@@ -220,18 +219,11 @@ void TraderGUI::slotSplitterMoved(int pos, int index)
 void TraderGUI::ctpActionLogin_triggered()
 {
 	CtpLogin dlg(this);
-	if (!dlg.exec())
-	{
-		return;
-	}
-	else
+	if (dlg.exec())
 	{
 		QString password = dlg.getPassword();
 		QString userName = dlg.getUserName();
-
-		//更新ui,接收数据中不要出现模态对话框
-		ui->ctpActionLogin->setEnabled(false);
-		ui->ctpActionLogout->setEnabled(true);
+		
 
 #ifdef _DEBUG
 		ctp_gate = serviceMgr->loadGateWay("ctp", "CTPGateway-D.dll");
@@ -239,14 +231,18 @@ void TraderGUI::ctpActionLogin_triggered()
 		ctp_gate = serviceMgr->loadGateWay("ctp", "CTPGateway.dll");
 #endif
 		ctp_gate->connect(userName.toStdString(), password.toStdString());
+
+		//更新ui,接收数据中不要出现模态对话框
+		//ui->ctpActionLogin->setEnabled(false);
+		//ui->ctpActionLogout->setEnabled(true);
 	}
 }
 
 void TraderGUI::ctpActionLogout_triggered()
 {
 	ctp_gate->close();
-	ui->ctpActionLogin->setEnabled(true);
-	ui->ctpActionLogout->setEnabled(false);
+	//ui->ctpActionLogin->setEnabled(true);
+	//ui->ctpActionLogout->setEnabled(false);
 }
 
 void TraderGUI::ctpActionConfig_triggered()

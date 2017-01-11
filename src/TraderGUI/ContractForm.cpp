@@ -48,7 +48,8 @@ ContractForm::~ContractForm()
 void ContractForm::init()
 {
 	qRegisterMetaType<ContractData>("ContractData");
-	connect(this, SIGNAL(updateEvent(ContractData)), this, SLOT(updateContent(ContractData)));
+	connect(this, SIGNAL(updateEvent(ContractData)), this, SLOT(updateContent(ContractData)), Qt::QueuedConnection);
+	connect(ui->ContractTableWidget, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(cancel_tableWidget_doubleCellClicked(int, int)), Qt::QueuedConnection);
 
 	this->serviceMgr->getEventEngine()->registerHandler(EVENT_CONTRACT, std::bind(&ContractForm::onContract, this, std::placeholders::_1), "ContractForm");
 }
@@ -131,5 +132,25 @@ void ContractForm::updateContent(ContractData contract)
 			QTableWidgetItem* item = new QTableWidgetItem(str_val);
 			ui->ContractTableWidget->setItem(row, i, item);
 		}
+	}
+}
+
+void ContractForm::cancel_tableWidget_doubleCellClicked(int row, int column)
+{
+	(void)column;
+
+	QString symbol = ui->ContractTableWidget->item(row, table_col_.indexOf(QStringLiteral("ºÏÔ¼´úÂë")))->text();
+
+	ContractData cn;
+	bool havecontract = serviceMgr->getContract(symbol.toStdString(), cn);
+	if (havecontract)
+	{
+		IGateway* pGateway = serviceMgr->getGateWay(cn.gateWayName);
+		SubscribeReq req;
+		req.symbol = symbol.toStdString();
+		if (pGateway)
+		{
+			pGateway->subscribe(req);
+		}		
 	}
 }

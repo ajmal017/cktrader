@@ -45,7 +45,7 @@ PositionForm::~PositionForm()
 void PositionForm::init()
 {
 	qRegisterMetaType<PositionData>("PositionData");
-	connect(this, SIGNAL(updateEvent(PositionData)), this, SLOT(updateContent(PositionData)));
+	connect(this, SIGNAL(updateEvent(PositionData)), this, SLOT(updateContent(PositionData)), Qt::QueuedConnection);
 	this->serviceMgr->getEventEngine()->registerHandler(EVENT_POSITION, std::bind(&PositionForm::onPosition, this, std::placeholders::_1), "PositionForm");
 }
 
@@ -133,4 +133,6 @@ void PositionForm::updateContent(PositionData pos)
 			ui->positionTableWidget->setItem(row, i, item);
 		}
 	}
+
+	ui->positionTableWidget->horizontalHeader()->resizeSections(QHeaderView::ResizeToContents);
 }

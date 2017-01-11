@@ -48,7 +48,7 @@ AccountForm::~AccountForm()
 void AccountForm::init()
 {
 	qRegisterMetaType<AccountData>("AccountData");
-	connect(this, SIGNAL(updateEvent(AccountData)), this, SLOT(updateContent(AccountData)));
+	connect(this, SIGNAL(updateEvent(AccountData)), this, SLOT(updateContent(AccountData)), Qt::QueuedConnection);
 	this->serviceMgr->getEventEngine()->registerHandler(EVENT_ACCOUNT, std::bind(&AccountForm::onAccount, this, std::placeholders::_1), "AccountForm");
 }
 
@@ -146,4 +146,6 @@ void AccountForm::updateContent(AccountData ac)
 			ui->accountTableWidget->setItem(row, i, item);
 		}
 	}
+
+	ui->accountTableWidget->horizontalHeader()->resizeSections(QHeaderView::ResizeToContents);
 }

@@ -47,7 +47,7 @@ public:
 	TaskContainer();
 	~TaskContainer();
 
-	Task wait_and_get_task();
+	bool wait_and_get_task(Task& t);
 	void put_task(Task& data);
 	void put_handler_task(Task& data);
 

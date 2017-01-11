@@ -190,10 +190,7 @@ namespace cktrader {
 		//gateWay->writeLog("CtpMd::processFrontConnected");
 		connectionStatus = true;
 
-		LogData log = LogData();
-		log.gateWayName = gateWayName;
-		log.logContent = "行情服务器连接成功";
-		gateWay->onLog(log);
+		gateWay->writeLog("行情服务器连接成功");
 
 		reqID++;
 		CThostFtdcReqUserLoginField myreq = CThostFtdcReqUserLoginField();
@@ -216,10 +213,7 @@ namespace cktrader {
 		loginStatus = false;
 		gateWay->mdConnected = false;
 
-		LogData log = LogData();
-		log.gateWayName = gateWayName;
-		log.logContent = "行情服务器连接断开";
-		gateWay->onLog(log);
+		gateWay->writeLog("行情服务器连接断开");
 	}
 
 	void CtpMd::processRspUserLogin(Datablk& data)
@@ -233,10 +227,8 @@ namespace cktrader {
 		{
 			loginStatus = true;
 			gateWay->mdConnected = true;
-			LogData log = LogData();
-			log.gateWayName = gateWayName;
-			log.logContent = "行情服务器登录完成";
-			gateWay->onLog(log);
+
+			gateWay->writeLog("行情服务器登录完成");
 
 			for (std::set<std::string>::iterator it = subscribedSymbols->begin(); it != subscribedSymbols->end(); it++)
 			{
@@ -264,10 +256,8 @@ namespace cktrader {
 		{
 			loginStatus = false;
 			gateWay->mdConnected = false;
-			LogData log = LogData();
-			log.gateWayName = gateWayName;
-			log.logContent = "行情服务器登出完成";
-			gateWay->onLog(log);
+
+			gateWay->writeLog("行情服务器登出完成");
 		}
 		else
 		{

@@ -503,10 +503,7 @@ namespace cktrader {
 	{
 		connectionStatus = true;
 
-		LogData log = LogData();
-		log.gateWayName = gateWayName;
-		log.logContent = "交易服务器连接成功";
-		gateWay->onLog(log);
+		gateWay->writeLog("交易服务器连接成功");
 
 		login();
 	}
@@ -517,10 +514,7 @@ namespace cktrader {
 		loginStatus = false;
 		gateWay->tdConnected = false;
 
-		LogData log = LogData();
-		log.gateWayName = gateWayName;
-		log.logContent = "交易服务器连接断开";
-		gateWay->onLog(log);
+		gateWay->writeLog("交易服务器连接断开");
 	}
 
 
@@ -539,10 +533,7 @@ namespace cktrader {
 			loginStatus = true;
 			gateWay->tdConnected = true;
 
-			LogData log = LogData();
-			log.gateWayName = gateWayName;
-			log.logContent = "交易服务器登录完成";
-			gateWay->onLog(log);
+			gateWay->writeLog("交易服务器登录完成");
 
 			CThostFtdcSettlementInfoConfirmField myreq = CThostFtdcSettlementInfoConfirmField();
 			memset(&myreq, 0, sizeof(myreq));
@@ -572,10 +563,7 @@ namespace cktrader {
 			loginStatus = false;
 			gateWay->tdConnected = false;
 
-			LogData log = LogData();
-			log.gateWayName = gateWayName;
-			log.logContent = "交易服务器登出完成";
-			gateWay->onLog(log);
+			gateWay->writeLog("交易服务器登出完成");
 		}
 		else
 		{
@@ -617,14 +605,11 @@ namespace cktrader {
 	{
 		CtpData ctp_data = data.cast<CtpData>();
 
-		LogData log = LogData();
-		log.gateWayName = gateWayName;
-		log.logContent = "结算信息确认完成";
-		gateWay->onLog(log);
+		gateWay->writeLog("结算信息确认完成");
 
 		if (ctp_data.task_last)
 		{
-			std::this_thread::sleep_for(std::chrono::seconds(2));
+			//std::this_thread::sleep_for(std::chrono::seconds(2));
 			CThostFtdcQryInstrumentField myreq = CThostFtdcQryInstrumentField();
 			memset(&myreq, 0, sizeof(myreq));
 			reqID++;
@@ -779,10 +764,7 @@ namespace cktrader {
 
 		if (ctp_data.task_last)
 		{
-			LogData log = LogData();
-			log.gateWayName = gateWayName;
-			log.logContent = "交易合约信息获取完成";
-			gateWay->onLog(log);
+			gateWay->writeLog("交易合约信息获取完成");
 		}
 	}
 
@@ -995,8 +977,8 @@ namespace cktrader {
 			api = CThostFtdcTraderApi::CreateFtdcTraderApi(pwd.c_str());
 			api->RegisterSpi(this);
 			api->RegisterFront((char*)address.c_str());
-			api->SubscribePublicTopic(THOST_TERT_QUICK);
-			api->SubscribePrivateTopic(THOST_TERT_QUICK);
+			api->SubscribePublicTopic(THOST_TERT_RESTART);
+			api->SubscribePrivateTopic(THOST_TERT_RESTART);
 			api->Init();
 		}
 		else if (!loginStatus)

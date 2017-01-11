@@ -12,7 +12,7 @@ CK_EXPORTS IStrategy* CreateStrategy(IServiceMgr*x, const char*name)
 	return g_strategy_art_rsi;
 }
 
-CK_EXPORTS int ReleaseStrategy(IStrategy*p)
+CK_EXPORTS int ReleaseStrategy()
 {
 	if (g_strategy_art_rsi)
 	{

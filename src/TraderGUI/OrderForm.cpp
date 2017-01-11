@@ -49,7 +49,8 @@ OrderForm::~OrderForm()
 void OrderForm::init()
 {
 	qRegisterMetaType<OrderData>("OrderData");
-	connect(this, SIGNAL(updateEvent(OrderData)), this, SLOT(updateContent(OrderData)));
+	connect(this, SIGNAL(updateEvent(OrderData)), this, SLOT(updateContent(OrderData)), Qt::QueuedConnection);
+	connect(ui->orderTableWidget, SIGNAL(cellDoubleClicked(int, int)), this, SLOT(cancel_tableWidget_doubleCellClicked(int, int)), Qt::QueuedConnection);
 	this->serviceMgr->getEventEngine()->registerHandler(EVENT_ORDER, std::bind(&OrderForm::onOrder, this, std::placeholders::_1), "OrderForm");
 }
 
@@ -139,6 +140,34 @@ void OrderForm::updateContent(OrderData order)
 
 			QTableWidgetItem* item = new QTableWidgetItem(str_val);
 			ui->orderTableWidget->setItem(row, i, item);
+		}
+	}
+
+	ui->orderTableWidget->horizontalHeader()->resizeSections(QHeaderView::ResizeToContents);
+}
+
+void OrderForm::cancel_tableWidget_doubleCellClicked(int row, int column)
+{
+	(void)column;
+
+	QString symbol = ui->orderTableWidget->item(row, table_col_.indexOf(QStringLiteral("合约代码")))->text();
+	QString orderID = ui->orderTableWidget->item(row, table_col_.indexOf(QStringLiteral("委托编号")))->text();
+
+	ContractData cn;
+	bool havecontract = serviceMgr->getContract(symbol.toStdString(), cn);
+	if (havecontract)
+	{
+		CancelOrderReq req;
+
+		req.symbol = symbol.toLocal8Bit().toStdString();
+		req.exchange = cn.exchange;
+		req.orderID = orderID.toLocal8Bit().toStdString();
+
+		cktrader::IGateway* pGateway = serviceMgr->getGateWay(cn.gateWayName);
+
+		if (pGateway)
+		{
+			pGateway->cancelOrder(req);
 		}
 	}
 }

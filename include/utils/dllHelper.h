@@ -15,7 +15,7 @@ private:
 	char m_szFileName[_MAX_DIR];                  // 文件名
 
 #if defined WINDOWS || _WIN32
-    HMODULE					m_hLibrary;                    // 模块句柄
+    HMODULE	m_hLibrary;                    // 模块句柄
 #else
 	void* m_hLibrary;
 #endif
@@ -36,6 +36,7 @@ protected:
 #endif		
 	}
 
+	//卸载dll
 	void dll_FreeLib()
 	{
 		if (m_hLibrary == NULL)
@@ -54,17 +55,17 @@ public:
 	CDllHelper(const char *lpszFileName) :
 		m_hLibrary(NULL)
 	{
-		sprintf_s(m_szFileName, _MAX_DIR, lpszFileName);
-		dll_Load();
+		if (lpszFileName)
+		{
+			sprintf_s(m_szFileName, _MAX_DIR, lpszFileName);
+			dll_Load();
+		}		
 	}
 
 	~CDllHelper()
 	{
-		if (m_hLibrary != NULL)
-		{
-			dll_FreeLib();
-			m_hLibrary = NULL;
-		}
+		dll_FreeLib();
+		m_hLibrary = NULL;
 	}
 
 public:
@@ -103,8 +104,6 @@ public:
 			0, NULL);
 		return (const char*)lpMsgBuf;
 #else
-		extern int errno;
-		errno = 0;
 		return dlerror();
 #endif
 	}

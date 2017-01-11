@@ -23,11 +23,11 @@ CTPGateWay::CTPGateWay(EventEngine* pEvent,std::string gateWayName):IGateway(pEv
 }
 CTPGateWay::~CTPGateWay()
 {
-	md->close();
+	close();
+
 	delete md;
 	md = nullptr;
 
-	td->close();
 	delete td;
 	td = nullptr;
 }
@@ -98,6 +98,7 @@ void CTPGateWay::qryPosition()
 }
 void CTPGateWay::close()
 {
+	m_event_service->unRegisterHandler(EVENT_TIMER,gateWayName);
 	if (mdConnected)
 	{
 		md->close();

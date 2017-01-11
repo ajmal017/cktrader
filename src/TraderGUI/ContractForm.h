@@ -33,6 +33,7 @@ private:
 
 private slots:
 	void updateContent(ContractData contract);
+	void cancel_tableWidget_doubleCellClicked(int row, int column);
 
 signals:
 	void updateEvent(ContractData contract);

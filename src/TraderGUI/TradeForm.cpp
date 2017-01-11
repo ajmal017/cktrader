@@ -46,7 +46,7 @@ TradeForm::~TradeForm()
 void TradeForm::init()
 {
 	qRegisterMetaType<TradeData>("TradeData");
-	connect(this, SIGNAL(updateEvent(TradeData)), this, SLOT(updateContent(TradeData)));
+	connect(this, SIGNAL(updateEvent(TradeData)), this, SLOT(updateContent(TradeData)), Qt::QueuedConnection);
 	this->serviceMgr->getEventEngine()->registerHandler(EVENT_TRADE, std::bind(&TradeForm::onTrade, this, std::placeholders::_1), "TradeForm");
 }
 
@@ -135,4 +135,6 @@ void TradeForm::updateContent(TradeData trade)
 			ui->tradeTableWidget->setItem(row, i, item);
 		}
 	}
+
+	ui->tradeTableWidget->horizontalHeader()->resizeSections(QHeaderView::ResizeToContents);
 }

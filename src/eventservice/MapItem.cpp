@@ -33,7 +33,7 @@ bool MapItem::read(Task& t)
 void MapItem::get_run_lock()
 {
 	//同一个策略、合约、事件的key，同一时间只能有一个thread处理
-	while (unique_thread_flag.test_and_set(std::memory_order_acquire))
+	while (unique_thread_flag.test_and_set())
 	{
 
 	}
@@ -41,7 +41,7 @@ void MapItem::get_run_lock()
 
 void MapItem::free_run_lock()
 {
-	unique_thread_flag.clear(std::memory_order_release);
+	unique_thread_flag.clear();
 }
 
 }//cktrader

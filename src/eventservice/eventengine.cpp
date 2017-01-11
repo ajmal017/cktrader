@@ -101,11 +101,19 @@ bool EventEngine::unRegisterHandler(std::string type, std::string accepter)
 	std::pair <std::multimap<std::string, Handle>::iterator, std::multimap<std::string, Handle>::iterator> ret;
 
 	ret = handlers->equal_range(type);
+	
 	for (std::multimap<std::string, Handle>::iterator it = ret.first; it != ret.second; ++it)
 	{
-		if (it->second.handle_register == accepter)
+		if (ret.first == handlers->begin())
 		{
+			handlers->erase(handlers->begin());
+		}
+		else if (it->second.handle_register == accepter)
+		{
+			std::multimap<std::string, Handle> ::iterator temp = it;
+			temp--; // 保存前一个迭代器
 			handlers->erase(it);
+			it = temp;//恢复指向 			
 		}
 	}
 	
@@ -172,9 +180,15 @@ bool EventEngine::stopEngine()
 	{
 		for (std::vector<std::thread*>::iterator it = m_task_thread_pool->begin(); it != m_task_thread_pool->end(); it++)
 		{
-			(*it)->join();
-			delete (*it);
-			m_task_thread_pool->erase(it);
+			if (task_pool->task_count())
+			{
+				(*it)->join();
+				delete (*it);
+			}
+			else
+			{
+				(*it)->detach();
+			}
 		}
 
 		delete m_task_thread_pool;
@@ -191,7 +205,11 @@ void EventEngine::processTask()
 	{
 		Task task;
 
-		task = task_pool->wait_and_get_task();
+		bool success;			
+		do
+		{
+			success = task_pool->wait_and_get_task(task);
+		} while (!success);
 
 		if (task.handle_flag)
 		{
@@ -206,8 +224,10 @@ void EventEngine::processTask()
 			{
 
 			}
-		}else
+		}
+		else
 		{
+			//the_mutex_handlers.lock();
 			//找到事件对应的处理函数,多线程注册是否有问题？
 			std::pair <std::multimap<std::string, Handle>::iterator, std::multimap<std::string, Handle>::iterator> ret;
 			ret = handlers->equal_range(task.type);	
@@ -226,7 +246,9 @@ void EventEngine::processTask()
 				handlerTask.handle_flag = true;
 				handlerTask.task_data = func;
 				task_pool->put_handler_task(handlerTask);
-			}//for			
+			}//for	
+
+			//the_mutex_handlers.unlock();
 		}//else
 
 		//通知下一个线程可以处理事件了，这样保证一个事件类型在同一时间只能处理一个合约

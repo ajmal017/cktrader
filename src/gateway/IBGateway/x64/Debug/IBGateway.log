@@ -1,0 +1,93 @@
+﻿  IbWrapper.cpp
+e:\2106\c++\cktrader\src\gateway\ibgateway\src\ibwrapper.cpp(1): fatal error C1083: Cannot open include file: 'IbWrapper.h': No such file or directory
+  IBGateway_iml.cpp
+e:\2106\c++\cktrader\src\gateway\ibgateway\src\ibgateway_iml.cpp(1): fatal error C1083: Cannot open include file: 'IBGateway.h': No such file or directory
+  IBGateway.cpp
+e:\2106\c++\cktrader\src\gateway\ibgateway\src\ibgateway.cpp(1): fatal error C1083: Cannot open include file: 'IBGateway.h': No such file or directory
+  IBApi.cpp
+e:\2106\c++\cktrader\src\gateway\ibgateway\src\ibapi.cpp(1): fatal error C1083: Cannot open include file: 'IBApi.h': No such file or directory
+  VolumeCondition.cpp
+  TimeCondition.cpp
+  StdAfx.cpp
+  SoftDollarTier.cpp
+  PriceCondition.cpp
+  PercentChangeCondition.cpp
+  OrderCondition.cpp
+  OperatorCondition.cpp
+  MarginCondition.cpp
+  executioncondition.cpp
+  ESocket.cpp
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\esocket.cpp(63): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  EReaderWMSignal.cpp
+  EReaderOSSignal.cpp
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\ereaderossignal.h(27): warning C4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\ereaderossignal.cpp(11): warning C4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
+  EReader.cpp
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\ereaderossignal.h(27): warning C4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\ereader.h(12): warning C4099: 'EReaderSignal': type name first seen using 'struct' now seen using 'class'
+  e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\ereadersignal.h(6): note: see declaration of 'EReaderSignal'
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclientsocket.h(13): warning C4099: 'EReaderSignal': type name first seen using 'struct' now seen using 'class'
+  e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\ereader.h(12): note: see declaration of 'EReaderSignal'
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\ereader.cpp(168): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\ereader.cpp(213): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\program files (x86)\microsoft visual studio 14.0\vc\include\xutility(2372): warning C4996: 'std::copy::_Unchecked_iterators::_Deprecate': Call to 'std::copy' with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS. See documentation on how to use Visual C++ 'Checked Iterators'
+  c:\program files (x86)\microsoft visual studio 14.0\vc\include\xutility(2372): note: see declaration of 'std::copy::_Unchecked_iterators::_Deprecate'
+  e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\ereader.cpp(188): note: see reference to function template instantiation '_OutIt *std::copy<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<char>>>,char*>(_InIt,_InIt,_OutIt)' being compiled
+          with
+          [
+              _OutIt=char *,
+              _InIt=std::_Vector_iterator<std::_Vector_val<std::_Simple_types<char>>>
+          ]
+  EMutex.cpp
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\emutex.cpp(35): warning C4800: 'BOOL': forcing value to bool 'true' or 'false' (performance warning)
+  EMessage.cpp
+  Generating Code...
+  Compiling...
+  EDecoder.cpp
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\edecoder.cpp(1721): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\edecoder.cpp(1970): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
+  EClientSocket.cpp
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\ereadersignal.h(6): warning C4099: 'EReaderSignal': type name first seen using 'class' now seen using 'struct'
+  e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\ereadersignal.h(5): note: see declaration of 'EReaderSignal'
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\ereaderossignal.h(27): warning C4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow)
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\ereader.h(12): warning C4099: 'EReaderSignal': type name first seen using 'struct' now seen using 'class'
+  e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\ereadersignal.h(6): note: see declaration of 'EReaderSignal'
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclientsocket.cpp(93): warning C4244: '=': conversion from 'SOCKET' to 'int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclientsocket.cpp(86): warning C4996: 'gethostbyname': Use getaddrinfo() or GetAddrInfoW() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  c:\program files (x86)\windows kits\8.1\include\um\winsock2.h(2238): note: see declaration of 'gethostbyname'
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclientsocket.cpp(175): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclientsocket.cpp(240): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  EClient.cpp
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(249): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(249): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(282): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(282): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(374): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(374): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(484): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(484): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(501): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(501): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(602): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(602): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(723): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(723): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(1221): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(1221): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(1292): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(1292): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(1455): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(1455): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(1480): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(1480): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(1493): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(1493): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(1681): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(1681): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(1704): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(1704): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+e:\2106\c++\cktrader\src\gateway\ibgateway\include\windows\client\eclient.cpp(2757): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
+  DefaultEWrapper.cpp
+  ContractCondition.cpp
+  json11.cpp
+  Generating Code...

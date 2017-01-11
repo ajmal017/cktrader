@@ -42,7 +42,7 @@ ErrorForm::~ErrorForm()
 void ErrorForm::init()
 {
 	qRegisterMetaType<ErrorData>("ErrorData");
-	connect(this, SIGNAL(updateEvent(ErrorData)), this, SLOT(updateContent(ErrorData)));
+	connect(this, SIGNAL(updateEvent(ErrorData)), this, SLOT(updateContent(ErrorData)), Qt::QueuedConnection);
 
 	this->serviceMgr->getEventEngine()->registerHandler(EVENT_ERROR, std::bind(&ErrorForm::onError, this, std::placeholders::_1), "ErrorForm");
 }

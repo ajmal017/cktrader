@@ -26,23 +26,21 @@ TaskContainer::~TaskContainer()
 	delete task_type_queue;
 }
 
-Task TaskContainer::wait_and_get_task()
+bool TaskContainer::wait_and_get_task(Task& t)
 {
-	Task t;
-
 	//取消循环，这里是否有问题？如果item读取不成功，t是什么？
 	std::string type;
 	do
 	{
 		type = read_task_queue();
-	} while ((!type.empty()));
+	} while (type.empty());
 
 	MapItem* item = read_task_map(type);
 	if (item)
 	{
-		item->read(t);
+		return item->read(t);
 	}
-	return t;
+	return false;
 }
 
 void TaskContainer::put_task(Task& data)
@@ -59,7 +57,13 @@ void TaskContainer::put_handler_task(Task& data)
 
 void TaskContainer::task_run_end(std::string task_type)
 {
-	(*task_map)[task_type]->free_run_lock();
+	CKMap::const_iterator it;
+	it = task_map->find(task_type);
+	if (it != task_map->end())
+	{
+		it->second->free_run_lock();
+	}
+	//(*task_map)[task_type]->free_run_lock();
 }
 
 std::string TaskContainer::read_task_queue()

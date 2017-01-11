@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_TraderGUI_t {
-    QByteArrayData data[1];
-    char stringdata0[10];
+    QByteArrayData data[16];
+    char stringdata0[287];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -29,10 +29,34 @@ struct qt_meta_stringdata_TraderGUI_t {
     )
 static const qt_meta_stringdata_TraderGUI_t qt_meta_stringdata_TraderGUI = {
     {
-QT_MOC_LITERAL(0, 0, 9) // "TraderGUI"
+QT_MOC_LITERAL(0, 0, 9), // "TraderGUI"
+QT_MOC_LITERAL(1, 10, 14), // "slotClickedBtn"
+QT_MOC_LITERAL(2, 25, 0), // ""
+QT_MOC_LITERAL(3, 26, 17), // "slotSplitterMoved"
+QT_MOC_LITERAL(4, 44, 3), // "pos"
+QT_MOC_LITERAL(5, 48, 5), // "index"
+QT_MOC_LITERAL(6, 54, 24), // "ctpActionLogin_triggered"
+QT_MOC_LITERAL(7, 79, 25), // "ctpActionLogout_triggered"
+QT_MOC_LITERAL(8, 105, 25), // "ctpActionConfig_triggered"
+QT_MOC_LITERAL(9, 131, 24), // "ltsActionLogin_triggered"
+QT_MOC_LITERAL(10, 156, 25), // "ltsActionLogout_triggered"
+QT_MOC_LITERAL(11, 182, 25), // "ltsActionConfig_triggered"
+QT_MOC_LITERAL(12, 208, 23), // "ibActionLogin_triggered"
+QT_MOC_LITERAL(13, 232, 24), // "ibActionLogout_triggered"
+QT_MOC_LITERAL(14, 257, 24), // "ibActionConfig_triggered"
+QT_MOC_LITERAL(15, 282, 4) // "quit"
 
     },
-    "TraderGUI"
+    "TraderGUI\0slotClickedBtn\0\0slotSplitterMoved\0"
+    "pos\0index\0ctpActionLogin_triggered\0"
+    "ctpActionLogout_triggered\0"
+    "ctpActionConfig_triggered\0"
+    "ltsActionLogin_triggered\0"
+    "ltsActionLogout_triggered\0"
+    "ltsActionConfig_triggered\0"
+    "ibActionLogin_triggered\0"
+    "ibActionLogout_triggered\0"
+    "ibActionConfig_triggered\0quit"
 };
 #undef QT_MOC_LITERAL
 
@@ -42,22 +66,65 @@ static const uint qt_meta_data_TraderGUI[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       0,    0, // methods
+      12,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
        0,       // signalCount
 
+ // slots: name, argc, parameters, tag, flags
+       1,    0,   74,    2, 0x08 /* Private */,
+       3,    2,   75,    2, 0x08 /* Private */,
+       6,    0,   80,    2, 0x08 /* Private */,
+       7,    0,   81,    2, 0x08 /* Private */,
+       8,    0,   82,    2, 0x08 /* Private */,
+       9,    0,   83,    2, 0x08 /* Private */,
+      10,    0,   84,    2, 0x08 /* Private */,
+      11,    0,   85,    2, 0x08 /* Private */,
+      12,    0,   86,    2, 0x08 /* Private */,
+      13,    0,   87,    2, 0x08 /* Private */,
+      14,    0,   88,    2, 0x08 /* Private */,
+      15,    0,   89,    2, 0x08 /* Private */,
+
+ // slots: parameters
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int, QMetaType::Int,    4,    5,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+
        0        // eod
 };
 
 void TraderGUI::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
-    Q_UNUSED(_o);
-    Q_UNUSED(_id);
-    Q_UNUSED(_c);
-    Q_UNUSED(_a);
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        TraderGUI *_t = static_cast<TraderGUI *>(_o);
+        Q_UNUSED(_t)
+        switch (_id) {
+        case 0: _t->slotClickedBtn(); break;
+        case 1: _t->slotSplitterMoved((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 2: _t->ctpActionLogin_triggered(); break;
+        case 3: _t->ctpActionLogout_triggered(); break;
+        case 4: _t->ctpActionConfig_triggered(); break;
+        case 5: _t->ltsActionLogin_triggered(); break;
+        case 6: _t->ltsActionLogout_triggered(); break;
+        case 7: _t->ltsActionConfig_triggered(); break;
+        case 8: _t->ibActionLogin_triggered(); break;
+        case 9: _t->ibActionLogout_triggered(); break;
+        case 10: _t->ibActionConfig_triggered(); break;
+        case 11: _t->quit(); break;
+        default: ;
+        }
+    }
 }
 
 const QMetaObject TraderGUI::staticMetaObject = {
@@ -84,6 +151,15 @@ int TraderGUI::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     _id = QMainWindow::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        if (_id < 12)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 12;
+    } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        if (_id < 12)
+            *reinterpret_cast<int*>(_a[0]) = -1;
+        _id -= 12;
+    }
     return _id;
 }
 QT_END_MOC_NAMESPACE
