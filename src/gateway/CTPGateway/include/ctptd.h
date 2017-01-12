@@ -116,7 +116,6 @@ namespace cktrader {
 		void processErrRtnOrderAction(Datablk& data);
 
 		void connect(std::string userID, std::string password, std::string brokerID, std::string address);
-
 		void login();
 		void qryAccount();
 		void qryPosition();

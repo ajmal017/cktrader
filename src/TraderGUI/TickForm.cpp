@@ -75,7 +75,7 @@ void TickForm::init()
 void TickForm::adjustTableWidget(QTableWidget* tableWidget)
 {
 	tableWidget->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft); //设置列左对齐=
-	tableWidget->horizontalHeader()->setStretchLastSection(true); //最后一览自适应宽度=
+	tableWidget->horizontalHeader()->setStretchLastSection(false); //最后一览自适应宽度=
 																  //tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents); //自适应列宽，不能拖动，会很卡=
 																  //tableWidget->horizontalHeader()->setDefaultSectionSize(150); //缺省列宽=
 	tableWidget->horizontalHeader()->setSectionsClickable(false); //设置表头不可点击=
@@ -200,19 +200,86 @@ void TickForm::updateContent(TickData tick)
 	ContractData contract;
 	serviceMgr->getContract(tick.symbol, contract);
 	vItem.insert(QStringLiteral("合约名称"), codec->toUnicode(contract.name.c_str()));
-	vItem.insert(QStringLiteral("最新价"), tick.lastPrice);
+
+	//更新tick数据，防止出现大数，需要判断
+	if (tick.lastPrice == DBL_MAX)
+	{
+		vItem.insert(QStringLiteral("最新价"), 0.0);
+	}
+	else
+	{
+		vItem.insert(QStringLiteral("最新价"), tick.lastPrice);
+	}	
 	vItem.insert(QStringLiteral("成交量"), tick.volume);
-	vItem.insert(QStringLiteral("买一价"), tick.bidPrice1);
+
+	if (tick.bidPrice1 == DBL_MAX)
+	{
+		vItem.insert(QStringLiteral("买一价"), 0.0);
+	}
+	else
+	{
+		vItem.insert(QStringLiteral("买一价"),tick.bidPrice1);
+	}	
 	vItem.insert(QStringLiteral("买一量"), tick.bidVolume1);
-	vItem.insert(QStringLiteral("卖一价"), tick.askPrice1);
+
+	if (tick.askPrice1 == DBL_MAX)
+	{
+		vItem.insert(QStringLiteral("卖一价"), 0.0);
+	}
+	else
+	{
+		vItem.insert(QStringLiteral("卖一价"), tick.askPrice1);
+	}	
 	vItem.insert(QStringLiteral("卖一量"), tick.askVolume1);
 	vItem.insert(QStringLiteral("持仓量"), tick.openInterest);
-	vItem.insert(QStringLiteral("开盘价"), tick.openPrice);
-	vItem.insert(QStringLiteral("最高价"), tick.highPrice);
-	vItem.insert(QStringLiteral("最低价"), tick.lowPrice);
+
+	if (tick.openPrice == DBL_MAX)
+	{
+		vItem.insert(QStringLiteral("开盘价"), 0.0);
+	}
+	else
+	{
+		vItem.insert(QStringLiteral("开盘价"), tick.openPrice);
+	}
+
+	if (tick.highPrice == DBL_MAX)
+	{
+		vItem.insert(QStringLiteral("最高价"), 0.0);
+	}
+	else
+	{
+		vItem.insert(QStringLiteral("最高价"), tick.highPrice);
+	}
+
+	if (tick.lowPrice == DBL_MAX)
+	{
+		vItem.insert(QStringLiteral("最低价"), 0.0);
+	}
+	else
+	{
+		vItem.insert(QStringLiteral("最低价"), tick.lowPrice);
+	}	
+	
 	vItem.insert(QStringLiteral("时间"), codec->toUnicode(tick.time.c_str()));
-	vItem.insert(QStringLiteral("涨停价"), tick.upperLimit);
-	vItem.insert(QStringLiteral("跌停价"), tick.lowerLimit);
+
+	if (tick.upperLimit == DBL_MAX)
+	{
+		vItem.insert(QStringLiteral("涨停价"), 0.0);
+	}
+	else
+	{
+		vItem.insert(QStringLiteral("涨停价"), tick.upperLimit);
+	}
+
+	if (tick.lowerLimit == DBL_MAX)
+	{
+		vItem.insert(QStringLiteral("跌停价"), 0.0);
+	}
+	else
+	{
+		vItem.insert(QStringLiteral("跌停价"), tick.lowerLimit);
+	}	
+	
 	vItem.insert(QStringLiteral("接口"), codec->toUnicode(tick.gateWayName.c_str()));
 
 	//根据id找到对应的行，然后用列的text来在map里面取值设置到item里面=

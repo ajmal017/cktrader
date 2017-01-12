@@ -46,13 +46,10 @@ private slots:
 	void slotClickedBtn();
 	void slotSplitterMoved(int pos, int index);
 	void ctpActionLogin_triggered();
-	void ctpActionLogout_triggered();
 	void ctpActionConfig_triggered();
 	void ltsActionLogin_triggered();
-	void ltsActionLogout_triggered();
 	void ltsActionConfig_triggered();
 	void ibActionLogin_triggered();
-	void ibActionLogout_triggered();
 	void ibActionConfig_triggered();
 
 	void quit();

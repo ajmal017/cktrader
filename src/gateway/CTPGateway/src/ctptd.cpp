@@ -998,9 +998,25 @@ namespace cktrader {
 			strncpy(myreq.BrokerID, brokerID.c_str(), sizeof(myreq.BrokerID) - 1);
 			strncpy(myreq.UserID, userID.c_str(), sizeof(myreq.UserID) - 1);
 			strncpy(myreq.Password, password.c_str(), sizeof(myreq.Password) - 1);
-		}
 
-		api->ReqUserLogin(&myreq, reqID);
+			int ret = api->ReqUserLogin(&myreq, reqID);
+
+			switch (ret)
+			{
+			case 0:
+				gateWay->writeLog("交易,登录请求发送成功");
+				break;
+			case -1:
+				gateWay->writeLog("交易,因网络原因发送失败");
+				break;
+			case -2:
+				gateWay->writeLog("交易,未处理请求队列总数量超限");
+				break;
+			case -3:
+				gateWay->writeLog("交易,每秒发送请求数量超限");
+				break;
+			}
+		}		
 	}
 
 	void CtpTd::qryAccount()
@@ -1135,9 +1151,10 @@ namespace cktrader {
 
 	void CtpTd::close()
 	{
+		//该函数在原生API里没有，用于安全退出API用，原生的join似乎不太稳定
 		this->api->RegisterSpi(NULL);
 		this->api->Release();
-		this->api = nullptr;
+		this->api = NULL;
 	}
 
 }//cktrader

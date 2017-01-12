@@ -70,7 +70,7 @@ namespace cktrader {
 
 		void subscribe(SubscribeReq& subscribeReq);
 
-		int close();
+		void close();
 
 		std::string getTradingDay();
 

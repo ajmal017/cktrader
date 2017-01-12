@@ -109,7 +109,6 @@
       <string>CTP</string>
      </property>
      <addaction name="ctpActionLogin"/>
-     <addaction name="ctpActionLogout"/>
      <addaction name="ctpActionConfig"/>
     </widget>
     <widget class="QMenu" name="menuLST">
@@ -117,7 +116,6 @@
       <string>LST</string>
      </property>
      <addaction name="ltsActionLogin"/>
-     <addaction name="ltsActionLogout"/>
      <addaction name="ltsActionConfig"/>
     </widget>
     <widget class="QMenu" name="menuIB">
@@ -125,7 +123,6 @@
       <string>IB</string>
      </property>
      <addaction name="ibActionLogin"/>
-     <addaction name="ibActionLogout"/>
      <addaction name="ibActionConfig"/>
     </widget>
     <addaction name="separator"/>

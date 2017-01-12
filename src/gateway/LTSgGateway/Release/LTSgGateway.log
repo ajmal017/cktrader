@@ -1,18 +1,1 @@
-﻿     Creating library E:\2106\c++\cktrader\Release\LTSGateway.lib and object E:\2106\c++\cktrader\Release\LTSGateway.exp
-  Generating code
-  0 of 2151 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    33 functions had inline decision re-evaluated but remain unchanged
-  Finished generating code
-  LTSgGateway.vcxproj -> E:\2106\c++\cktrader\Release\LTSGateway.dll
-  LTSgGateway.vcxproj -> E:\2106\c++\cktrader\Release\LTSGateway.pdb (Full PDB)
-  E:\2106\c++\cktrader\Release\LTSGateway.dll
-  复制了 1 个文件
-  E:\2106\c++\cktrader\lib\securitymduserapi.dll
-  复制了 1 个文件
-  E:\2106\c++\cktrader\lib\securityqueryapi.dll
-  复制了 1 个文件
-  E:\2106\c++\cktrader\lib\securitytraderapi.dll
-  复制了 1 个文件
-  E:\2106\c++\cktrader\src\gateway\LTSgGateway\lts_setting.json
-  复制了 1 个文件
+﻿

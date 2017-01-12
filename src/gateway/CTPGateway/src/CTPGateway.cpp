@@ -105,7 +105,7 @@ void CTPGateWay::close()
 	}
 	if (tdConnected)
 	{
-		td->close();
+		//td->close();
 	}
 }
 

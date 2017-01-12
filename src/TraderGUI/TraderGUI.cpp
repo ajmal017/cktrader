@@ -89,15 +89,12 @@ TraderGUI::TraderGUI(cktrader::ServiceMgr* mgr, QWidget *parent)
 	spliter_pushButton_->move(ui->strategy_widget->width() - (spliter_pushButton_->width()/2)+2, (ui->strategy_widget->height() - spliter_pushButton_->height()) / 2);
 	
 	ui->ctpActionLogin->setEnabled(false);
-	ui->ctpActionLogout->setEnabled(false);
 	ui->ctpActionConfig->setEnabled(true);
 
 	ui->ltsActionLogin->setEnabled(false);
-	ui->ltsActionLogout->setEnabled(false);
 	ui->ltsActionConfig->setEnabled(true);
 
 	ui->ibActionLogin->setEnabled(false);
-	ui->ibActionLogout->setEnabled(false);
 	ui->ibActionConfig->setEnabled(true);
 }
 
@@ -141,7 +138,6 @@ void TraderGUI::init()
 
 	connect(ui->ctpActionConfig, SIGNAL(triggered()), this, SLOT(ctpActionConfig_triggered()));
 	connect(ui->ctpActionLogin, SIGNAL(triggered()), this, SLOT(ctpActionLogin_triggered()));
-	connect(ui->ctpActionLogout, SIGNAL(triggered()), this, SLOT(ctpActionLogout_triggered()));
 
 	connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(quit()));
 
@@ -233,16 +229,8 @@ void TraderGUI::ctpActionLogin_triggered()
 		ctp_gate->connect(userName.toStdString(), password.toStdString());
 
 		//更新ui,接收数据中不要出现模态对话框
-		//ui->ctpActionLogin->setEnabled(false);
-		//ui->ctpActionLogout->setEnabled(true);
+		ui->ctpActionLogin->setEnabled(false);
 	}
-}
-
-void TraderGUI::ctpActionLogout_triggered()
-{
-	ctp_gate->close();
-	//ui->ctpActionLogin->setEnabled(true);
-	//ui->ctpActionLogout->setEnabled(false);
 }
 
 void TraderGUI::ctpActionConfig_triggered()
@@ -261,22 +249,12 @@ void TraderGUI::ltsActionLogin_triggered()
 
 }
 
-void TraderGUI::ltsActionLogout_triggered()
-{
-
-}
-
 void TraderGUI::ltsActionConfig_triggered()
 {
 
 }
 
 void TraderGUI::ibActionLogin_triggered()
-{
-
-}
-
-void TraderGUI::ibActionLogout_triggered()
 {
 
 }
